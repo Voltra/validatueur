@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "description": "Feature complete validation and sanitization library",
   "main": "dist/index.js",
-  "scripts": {},
+  "scripts": {
+  	"build": "webpack --progress --colors",
+	"watch": "webpack --progress --colors --watch",
+	"start": "npm run build"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Voltra/validatueur.git"
