@@ -23,5 +23,7 @@ module.exports = {
 	output: {
 		filename: "index.js",
 		path: here("dist"),
+		library: "validatueur",
+		libraryTarget: "umd",
 	},
 };
