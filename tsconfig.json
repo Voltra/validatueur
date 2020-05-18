@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"strictBindCallApply": true,
+		"strictNullChecks": true,
+		"noImplicitAny": true,
+		"module": "ESNext",
+		"target": "es5",
+		"lib": "ESNext",
+		"allowJs": true
+	},
+}
