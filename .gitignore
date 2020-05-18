@@ -1,0 +1,11 @@
+.env
+tmp/
+log/
+logs/
+*.log
+
+node_modules/
+.idea/
+.vscode/
+.brackets.json
+*.swp
