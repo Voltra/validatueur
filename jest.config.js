@@ -10,5 +10,4 @@ module.exports = {
 		"tsx",
 	],
 	collectCoverage: true,
-	mapCoverage: true,
 };
