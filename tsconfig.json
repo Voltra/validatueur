@@ -12,7 +12,8 @@
 			"ESNext",
 		],
 		"allowJs": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"checkJs": true,
 	},
 	"exclude": [
 		"node_modules",
