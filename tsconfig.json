@@ -6,7 +6,10 @@
 		"noImplicitAny": true,
 		"module": "ESNext",
 		"target": "es5",
-		"lib": "ESNext",
-		"allowJs": true
+		"lib": [
+			"ESNext",
+		],
+		"allowJs": true,
+		"esModuleInterop": true
 	},
 }
