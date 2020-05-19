@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist/",
+		"declaration": true,
+		"declarationDir": "./lib/",
 		"strictBindCallApply": true,
 		"strictNullChecks": true,
 		"noImplicitAny": true,
@@ -12,4 +14,11 @@
 		"allowJs": true,
 		"esModuleInterop": true
 	},
+	"exclude": [
+		"node_modules",
+		"lib",
+	],
+	"include": [
+		"src",
+	]
 }

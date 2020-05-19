@@ -3,9 +3,10 @@
 	"version": "0.0.0",
 	"description": "Feature complete validation and sanitization library",
 	"main": "dist/index.js",
+	"types": "lib/index.d.ts",
 	"scripts": {
-		"build": "webpack --progress --colors",
-		"watch": "webpack --progress --colors --watch",
+		"build": "webpack --colors",
+		"watch": "webpack --colors --watch",
 		"start": "npm run build",
 		"test": "jest",
 		"tdd": "jest --watchAll"

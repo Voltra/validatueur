@@ -1,4 +1,5 @@
 .env
+coverages/
 tmp/
 log/
 logs/
