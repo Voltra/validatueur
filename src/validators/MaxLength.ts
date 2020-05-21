@@ -6,7 +6,11 @@ export class MaxLength<T = string> extends AbstractValidator<T, string> {
 	public get rule(): string {
 		return "maxLength";
 	}
-	protected __validate(value: T, max: number, exclusive: boolean = true): Validatueur.Optional<string> {
+	protected __validate(
+		value: T,
+		max: number,
+		exclusive: boolean = true
+	): Validatueur.Optional<string> {
 		const str = asStr(value);
 
 		const validates = exclusive ? str.length < max : str.length <= max;

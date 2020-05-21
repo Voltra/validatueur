@@ -7,7 +7,11 @@ export class MinLength<T = string> extends AbstractValidator<T, string> {
 		return "minLength";
 	}
 
-	protected __validate(value: T, min: number, exclusive: boolean = false): Validatueur.Optional<string> {
+	protected __validate(
+		value: T,
+		min: number,
+		exclusive: boolean = false
+	): Validatueur.Optional<string> {
 		const str = asStr(value);
 		const validates = exclusive ? str.length > min : str.length >= min;
 		if (str.length >= min) return str;

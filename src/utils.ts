@@ -16,8 +16,7 @@ export const contains = <T>(values: any[], value: T) =>
 	values.some(v => v === value);
 
 export const asNumber = <T>(value: T) => {
-	if(typeof value == "number")
-		return value;
+	if (typeof value == "number") return value;
 
 	const str = asStr(value);
 	const integer = parseInt(str, 10);
