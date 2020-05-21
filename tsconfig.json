@@ -5,18 +5,20 @@
 		"declarationDir": "./lib/",
 		"strictBindCallApply": true,
 		"strictNullChecks": true,
-		"noImplicitAny": true,
+		//"noImplicitAny": true,
 		"module": "ESNext",
 		"target": "es5",
 		"lib": [
 			"ESNext",
 		],
 		"allowJs": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"checkJs": true,
 	},
 	"exclude": [
 		"node_modules",
 		"lib",
+		"tests",
 	],
 	"include": [
 		"src",

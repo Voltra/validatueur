@@ -1,7 +1,3 @@
-class Test<T>{
-	private t: T;
-}
-
-export {
-	Test,
-}
+export { Validatueur } from "./api/index";
+export { errorFrom, sanitizerWrapperGenerator } from "./api/helpers";
+export { Schema } from "./api/Schema";
