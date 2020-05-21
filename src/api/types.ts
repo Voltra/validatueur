@@ -1,7 +1,7 @@
 /**
  * A type that represents an empty value
  */
-export type None = null | undefined;
+export type None = /* null | */ undefined;
 
 /**
  * A type that represents a value that might be there
@@ -19,5 +19,5 @@ export type Result<T, E> = T | E;
 export type Extended<T> = T | (T & { [key: string]: any });
 
 export const isNone = <T>(opt: Optional<T>) => {
-	return opt === null || opt === undefined;
+	return /* opt === null || */ opt === undefined;
 };
