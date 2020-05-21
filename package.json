@@ -12,6 +12,7 @@
 		"tdd": "jest --watchAll",
 		"format": "prettier --config prettier.config.js --write 'src/**/*.ts' 'tests/**/**.ts'"
 	},
+	"pre-commit.silence": true,
 	"pre-commit": [
 		"format"
 	],
