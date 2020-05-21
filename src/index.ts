@@ -1,4 +1,3 @@
 export { Validatueur } from "./api/index";
-
-/* export {
-} */
+export { errorFrom } from "./api/helpers";
+export { Schema } from "./api/Schema";

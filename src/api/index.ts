@@ -12,21 +12,23 @@ import {
 } from "./ValidatorArgs";
 import { Validator as _Validator } from "./Validator";
 import { Sanitizer as _Sanitizer } from "./Sanitizer";
-import { errorFrom as _errorFrom } from "./helpers";
+import { Schema as _Schema } from "./Schema";
+import { ValidatedSchema as _ValidatedSchema } from "./ValidatedSchema";
 
 export namespace Validatueur {
-	type Optional<T> = _Optional<T>;
-	type None = _None;
-	type Result<T, E> = _Result<T, E>;
-	type Extended<T> = _Extended<T>;
+	export type Optional<T> = _Optional<T>;
+	export type None = _None;
+	export type Result<T, E> = _Result<T, E>;
+	export type Extended<T> = _Extended<T>;
 
-	type Messages = _Messages;
-	type Error = _Error;
+	export type Messages = _Messages;
+	export type Error = _Error;
 
-	type ValidatorArgs = _ValidatorArgs;
-	type FormatArgs = _FormatArgs;
-	type Validator<T> = _Validator<T>;
-	type Sanitizer<T, E = T> = _Sanitizer<T, E>;
+	export type ValidatorArgs = _ValidatorArgs;
+	export type FormatArgs = _FormatArgs;
+	export type Validator<T> = _Validator<T>;
+	export type Sanitizer<T, E = T> = _Sanitizer<T, E>;
 
-	const errorFrom = _errorFrom;
+	export const Schema = _Schema;
+	export type ValidatedSchema = _ValidatedSchema;
 }
