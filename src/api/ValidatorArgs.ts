@@ -7,3 +7,5 @@ export interface ValidatorArgs{
 export interface FormatArgs /* extends ValidatorArgs */ {
 	rule: string,
 }
+
+export type Formatter = (obj: FormatArgs) => string;

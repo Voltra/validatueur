@@ -1,5 +1,5 @@
 import compile from "string-template/compile"
-import { ValidatorArgs, FormatArgs } from "./ValidatorArgs"
+import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs"
 
 const recordFromArgs = (args: ValidatorArgs) => {
 	const rec: Record<string, any> = {
@@ -20,6 +20,11 @@ const defineArrayArgs = (args: string[], payload: Record<string, any>) => {
 	args.forEach(defineArrayArg(payload));
 };
 
+/**
+ * Precompile the error message for the given arguments
+ * @param {ValidatorArgs} args - The arguments for the validator
+ * @returns {Formatter}
+ */
 export const precompile = (args: ValidatorArgs) => {
 	const compiled = compile(args.message);
 

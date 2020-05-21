@@ -1,5 +1,5 @@
 import { Optional } from "./types"
 
-export interface Sanitizer<T, E = T>{
-	sanitize(value: T): Optional<E>;
+export interface Sanitizer<T, U = T>{
+	sanitize(value: T): Optional<U>;
 }
