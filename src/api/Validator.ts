@@ -2,12 +2,13 @@ import { Result } from "./types";
 import { Error } from "./Error";
 import { ValidatorArgs } from "./ValidatorArgs";
 
-export interface Validator<T> {
-	validate(value: T, args: ValidatorArgs): Result<T, Error>;
+export interface Validator<T, U = T> {
+	validate(value: T, args: ValidatorArgs): Result<U, Error>;
 }
 
-export interface ValidatorWrapper<T> {
-	args: string[];
+export interface ValidatorWrapper<T, U = T> {
+	args: any[];
+	rule: string;
 
-	validator(): Validator<T>;
+	validator(): Validator<T, U>;
 }

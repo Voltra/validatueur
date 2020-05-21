@@ -17,3 +17,8 @@ export type Result<T, E> = T | E;
  * A type that is either a value type or a value type with additional properties
  */
 export type Extended<T> = T | (T & { [key: string]: any });
+
+
+export const isNone = <T>(opt: Optional<T>) => {
+	return opt === null || opt === undefined;
+}

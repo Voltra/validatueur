@@ -3,12 +3,17 @@ import { Error, isError } from "./Error";
 import { ValidatedSchema } from "./ValidatedSchema";
 import { asSequence } from "sequency";
 
+export interface SchemaArgs{
+	rules: Record<string, ValidatorWrapper<any>>,
+	messages: Record<string, string>,
+}
+
 export class Schema {
-	public static from(
-		ruleSet: Record<string, ValidatorWrapper<any>>,
-		messages: Record<string, string>
-	) {
-		return new this(ruleSet, messages);
+	public static from({
+		rules,
+		messages
+	}: SchemaArgs) {
+		return new this(rules, messages);
 	}
 
 	protected constructor(
@@ -26,9 +31,12 @@ export class Schema {
 					};
 
 				const wrapper = this.ruleSet[field];
-				const { args } = wrapper;
+				const { args, name } = wrapper;
+				const messageField = `${field}.${name}`;
 				const message =
-					field in this.messages ? this.messages[field] : "";
+					messageField in this.messages
+						? this.messages[messageField]
+						: "";
 
 				const result = wrapper.validator().validate(value, {
 					args,
@@ -42,7 +50,7 @@ export class Schema {
 				};
 			})
 			.reduce(
-				(acc, { field, result }) => {
+				(acc: ValidatedSchema, { field, result }) => {
 					if (isError(result)) acc.errors.push(result as Error);
 					else acc.values[field] = result as any;
 
