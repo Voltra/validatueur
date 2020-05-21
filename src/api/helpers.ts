@@ -1,9 +1,9 @@
-import { Extended, Result, isNone } from "./types";
+import { Extended, Result, isNone, Optional } from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
 import { Sanitizer } from "./Sanitizer";
-import { Validator } from "./Validator";
+import { Validator, ValidatorWrapper } from "./Validator";
 
 /**
  * Create an error object from the validation and formatting arguments
@@ -32,7 +32,8 @@ export const sanitizerWrapperGenerator = <T, U>(
 	rule: string,
 	sanitizer: Sanitizer<T, U>
 ) => {
-	return (...args: any[]) => ({
+	return <V>(parent: Optional<ValidatorWrapper<V, T>> = null, ...args: any[]) => ({
+		parent,
 		args,
 		rule,
 		validator(): Validator<T, U> {

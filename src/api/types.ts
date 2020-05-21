@@ -3,6 +3,7 @@
  */
 export type None = null | undefined;
 
+
 /**
  * A type that represents a value that might be there
  */

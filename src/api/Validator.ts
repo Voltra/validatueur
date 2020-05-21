@@ -1,4 +1,4 @@
-import { Result } from "./types";
+import { Result, Optional } from "./types";
 import { Error } from "./Error";
 import { ValidatorArgs } from "./ValidatorArgs";
 
@@ -7,6 +7,7 @@ export interface Validator<T, U = T> {
 }
 
 export interface ValidatorWrapper<T, U = T> {
+	parent: Optional<ValidatorWrapper<any, T>>;
 	args: any[];
 	rule: string;
 

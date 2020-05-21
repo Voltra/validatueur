@@ -28,8 +28,8 @@ export class Schema {
 					};
 
 				const wrapper = this.ruleSet[field];
-				const { args, name } = wrapper;
-				const messageField = `${field}.${name}`;
+				const { args, rule } = wrapper;
+				const messageField = `${field}.${rule}`;
 				const message =
 					messageField in this.messages
 						? this.messages[messageField]
