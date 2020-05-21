@@ -21,5 +21,5 @@ export type Result<T, E> = T | E;
 export type Extended<T> = T | (T & { [key: string]: any });
 
 export const isNone = <T>(opt: Optional<T>) => {
-	return /* opt === null || */ opt === undefined;
+	return opt === none;
 };

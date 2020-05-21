@@ -1,8 +1,7 @@
-import { ValidatorWrapper } from "./Validator";
 import { Error, isError } from "./Error";
 import { ValidatedSchema } from "./ValidatedSchema";
-import { asSequence } from "sequency";
 import { RuleChain } from "../rules";
+import { asSequence } from "sequency";
 
 export interface SchemaArgs {
 	rules: Record<string, RuleChain>;

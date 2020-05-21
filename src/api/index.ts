@@ -11,7 +11,10 @@ import {
 	ValidatorArgs as _ValidatorArgs,
 	FormatArgs as _FormatArgs,
 } from "./ValidatorArgs";
-import { Validator as _Validator, ValidatorWrapper as _ValidatorWrapper } from "./Validator";
+import {
+	Validator as _Validator,
+	ValidatorWrapper as _ValidatorWrapper,
+} from "./Validator";
 import { Sanitizer as _Sanitizer } from "./Sanitizer";
 import { Schema as _Schema } from "./Schema";
 import { ValidatedSchema as _ValidatedSchema } from "./ValidatedSchema";
@@ -31,7 +34,6 @@ export namespace Validatueur {
 	export type Validator<T, U = T> = _Validator<T, U>;
 	export type Sanitizer<T, U = T> = _Sanitizer<T, U>;
 	export type ValidatorWrapper<T, U = T> = _ValidatorWrapper<T, U>;
-
 
 	export const Schema = _Schema;
 	export type ValidatedSchema = _ValidatedSchema;

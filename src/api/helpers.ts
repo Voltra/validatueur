@@ -28,15 +28,13 @@ export const errorFrom = (
  * @param rule - The name of the sanitization rule
  * @param sanitizer - The sanitizer to wrap
  */
-export const sanitizerWrapperGenerator = <T, U>(
+export const sanitizerWrapperGenerator = <T = any, U = T>(
 	rule: string,
 	sanitizer: Sanitizer<T, U>
 ) => {
-	return <V>(
-		child: Optional<ValidatorWrapper<U, V>> = none,
-		...args: any[]
-	) => ({
-		child,
+	return (...args: any[]) => ({
+		parent: none,
+		child: none,
 		args,
 		rule,
 		validator(): Validator<T, U> {
