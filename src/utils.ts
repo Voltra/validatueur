@@ -11,3 +11,6 @@ export const isValue = <T>(value: T) => {
 };
 
 export const trim = <T>(value: T) => asStr(value).trim();
+
+export const contains = (values: any[], value: any) =>
+	values.some((v) => v === value);
