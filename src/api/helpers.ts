@@ -28,23 +28,25 @@ export const errorFrom = (
  * @param rule - The name of the sanitization rule
  * @param sanitizer - The sanitizer to wrap
  */
-export const sanitizerWrapperGenerator = <T, U>(rule: string, sanitizer: Sanitizer<T, U>) => {
+export const sanitizerWrapperGenerator = <T, U>(
+	rule: string,
+	sanitizer: Sanitizer<T, U>
+) => {
 	return (...args: any[]) => ({
 		args,
 		rule,
-		validator(): Validator<T, U>{
+		validator(): Validator<T, U> {
 			return {
-				validate(value: T, vargs: ValidatorArgs): Result<U, Error>{
+				validate(value: T, vargs: ValidatorArgs): Result<U, Error> {
 					vargs.args = args; //replace provided arguments with already given arguments
 					const opt = sanitizer.sanitize(value, vargs);
 
-					if(isNone(opt))
+					if (isNone(opt))
 						return errorFrom(vargs, {
 							rule,
 						});
-					else
-						return opt as U;
-				}
+					else return opt as U;
+				},
 			};
 		},
 	});

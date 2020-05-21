@@ -26,8 +26,8 @@ export namespace Validatueur {
 
 	export type ValidatorArgs = _ValidatorArgs;
 	export type FormatArgs = _FormatArgs;
-	export type Validator<T> = _Validator<T>;
-	export type Sanitizer<T, E = T> = _Sanitizer<T, E>;
+	export type Validator<T, U = T> = _Validator<T, U>;
+	export type Sanitizer<T, U = T> = _Sanitizer<T, U>;
 
 	export const Schema = _Schema;
 	export type ValidatedSchema = _ValidatedSchema;

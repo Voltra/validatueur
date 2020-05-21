@@ -3,16 +3,13 @@ import { Error, isError } from "./Error";
 import { ValidatedSchema } from "./ValidatedSchema";
 import { asSequence } from "sequency";
 
-export interface SchemaArgs{
-	rules: Record<string, ValidatorWrapper<any>>,
-	messages: Record<string, string>,
+export interface SchemaArgs {
+	rules: Record<string, ValidatorWrapper<any>>;
+	messages: Record<string, string>;
 }
 
 export class Schema {
-	public static from({
-		rules,
-		messages
-	}: SchemaArgs) {
+	public static from({ rules, messages }: SchemaArgs) {
 		return new this(rules, messages);
 	}
 
