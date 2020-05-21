@@ -15,5 +15,8 @@ export abstract class AbstractValidator<T, U = T>
 	}
 
 	public abstract get rule(): string;
-	protected abstract __validate(value: T, ...args: any[]): Validatueur.Optional<U>;
+	protected abstract __validate(
+		value: T,
+		...args: any[]
+	): Validatueur.Optional<U>;
 }
