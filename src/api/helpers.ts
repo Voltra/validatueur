@@ -1,4 +1,4 @@
-import { Extended, Result, isNone, Optional } from "./types";
+import { Extended, Result, isNone, Optional, none } from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
@@ -33,10 +33,10 @@ export const sanitizerWrapperGenerator = <T, U>(
 	sanitizer: Sanitizer<T, U>
 ) => {
 	return <V>(
-		parent: Optional<ValidatorWrapper<V, T>> = null,
+		child: Optional<ValidatorWrapper<U, V>> = none,
 		...args: any[]
 	) => ({
-		parent,
+		child,
 		args,
 		rule,
 		validator(): Validator<T, U> {

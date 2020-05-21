@@ -2,9 +2,10 @@ import { ValidatorWrapper } from "./Validator";
 import { Error, isError } from "./Error";
 import { ValidatedSchema } from "./ValidatedSchema";
 import { asSequence } from "sequency";
+import { RuleChain } from "../rules";
 
 export interface SchemaArgs {
-	rules: Record<string, ValidatorWrapper<any>>;
+	rules: Record<string, RuleChain>;
 	messages: Record<string, string>;
 }
 
@@ -14,7 +15,7 @@ export class Schema {
 	}
 
 	protected constructor(
-		protected ruleSet: Record<string, ValidatorWrapper<any>>,
+		protected ruleSet: Record<string, RuleChain>,
 		protected messages: Record<string, string>
 	) {}
 
@@ -27,19 +28,8 @@ export class Schema {
 						result: value,
 					};
 
-				const wrapper = this.ruleSet[field];
-				const { args, rule } = wrapper;
-				const messageField = `${field}.${rule}`;
-				const message =
-					messageField in this.messages
-						? this.messages[messageField]
-						: "";
-
-				const result = wrapper.validator().validate(value, {
-					args,
-					field,
-					message,
-				});
+				const chain = this.ruleSet[field];
+				const result = chain.validate(field, value, this.messages);
 
 				return {
 					field,

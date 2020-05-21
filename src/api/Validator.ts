@@ -8,6 +8,7 @@ export interface Validator<T, U = T> {
 
 export interface ValidatorWrapper<T, U = T> {
 	parent: Optional<ValidatorWrapper<any, T>>;
+	child: Optional<ValidatorWrapper<U, any>>;
 	args: any[];
 	rule: string;
 

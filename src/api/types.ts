@@ -3,6 +3,8 @@
  */
 export type None = /* null | */ undefined;
 
+export const none = undefined;
+
 /**
  * A type that represents a value that might be there
  */
