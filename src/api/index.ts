@@ -1,4 +1,4 @@
-import { Optional as _Optional, Result as _Result, None as _None } from "./types"
+import { Optional as _Optional, Result as _Result, None as _None, Extended as _Extended } from "./types"
 import { Messages as _Messages } from "./Messages"
 import { Error as _Error } from "./Error"
 import { ValidatorArgs as _ValidatorArgs, FormatArgs as _FormatArgs } from "./ValidatorArgs"
@@ -10,6 +10,7 @@ export namespace Validatueur{
 	type Optional<T> = _Optional<T>;
 	type None = _None;
 	type Result<T, E> = _Result<T, E>;
+	type Extended<T> = _Extended<T>;
 
 	type Messages = _Messages;
 	type Error = _Error;

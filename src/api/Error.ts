@@ -5,3 +5,9 @@ export interface Error{
 	message: string,
 	rule: Optional<string>,
 }
+
+export const isError = (e: any) => e && [
+	"field",
+	"message",
+	"rule",
+].every(key => key in e);

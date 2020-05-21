@@ -1,3 +1,4 @@
+import { Extended } from "./types"
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs"
 import { Error } from "./Error"
 import { precompile } from "./templating"
@@ -7,7 +8,7 @@ import { precompile } from "./templating"
  * @param args - The validation arguments
  * @param fmtArgs - The formatting arguments
  */
-export const errorFrom = (args: ValidatorArgs, fmtArgs: FormatArgs): Error => {
+export const errorFrom = (args: ValidatorArgs, fmtArgs: Extended<FormatArgs>): Error => {
 	const message = precompile(args)(fmtArgs);
 
 	return {

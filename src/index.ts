@@ -1,5 +1,4 @@
-export {  } from "./api"
+export { Validatueur } from "./api/index"
 
-export {
-	Test,
-}
+/* export {
+} */
