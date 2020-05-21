@@ -12,18 +12,6 @@
 		"tdd": "jest --watchAll",
 		"format": "prettier --config prettier.config.js --write 'src/**/*.ts' 'tests/**/**.ts'"
 	},
-	"pre-commit": {
-		"silent": true,
-		"run": [
-			"format"
-		]
-	},
-	"pre-push": {
-		"silent": true,
-		"run": [
-			"test"
-		]
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Voltra/validatueur.git"
@@ -43,8 +31,6 @@
 		"@types/jest": "^25.2.3",
 		"@types/string-template": "^1.0.2",
 		"jest": "^26.0.1",
-		"pre-commit": "^1.2.2",
-		"pre-push": "^0.1.1",
 		"prettier": "^2.0.5",
 		"ts-jest": "^26.0.0",
 		"ts-loader": "^7.0.4",
