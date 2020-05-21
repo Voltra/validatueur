@@ -32,7 +32,10 @@ export const sanitizerWrapperGenerator = <T, U>(
 	rule: string,
 	sanitizer: Sanitizer<T, U>
 ) => {
-	return <V>(parent: Optional<ValidatorWrapper<V, T>> = null, ...args: any[]) => ({
+	return <V>(
+		parent: Optional<ValidatorWrapper<V, T>> = null,
+		...args: any[]
+	) => ({
 		parent,
 		args,
 		rule,
