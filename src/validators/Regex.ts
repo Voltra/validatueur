@@ -11,7 +11,7 @@ export class Regex<T = string> extends AbstractValidator<T, string> {
 		full: boolean = false
 	): Validatueur.Optional<string> {
 		const str = `${value}`;
-		const validates = full ? () => re.test(str) : () => str.match(str);
-		if (validates()) return str;
+		const validates = full ? re.test(str) : !!str.match(str);
+		if (validates) return str;
 	}
 }
