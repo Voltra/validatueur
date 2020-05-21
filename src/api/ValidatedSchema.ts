@@ -1,6 +1,6 @@
-import { Error } from "./Error"
+import { Error } from "./Error";
 
-export interface ValidatedSchema{
-	errors: Error[],
-	data: Record<string, any>,
+export interface ValidatedSchema {
+	errors: Error[];
+	data: Record<string, any>;
 }

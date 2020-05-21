@@ -1,8 +1,8 @@
-import { precompile } from "../../src/api/templating"
-import { FormatArgs } from "../../src/api/ValidatorArgs"
+import { precompile } from "../../src/api/templating";
+import { FormatArgs } from "../../src/api/ValidatorArgs";
 
-describe("precompile", function(){
-	it("renders the given string if no formatting is given", function(){
+describe("precompile", function () {
+	it("renders the given string if no formatting is given", function () {
 		const fmt: FormatArgs = {
 			rule: "test",
 		};
@@ -10,20 +10,19 @@ describe("precompile", function(){
 		[
 			"This is a very long test string to check everything",
 			"lorem ipsum dolor sit amet",
-		].forEach(message => expect(
-			precompile({
-				args: [],
-				field: "test",
-				message,
-			})(fmt)
-		).toEqual(message));
+		].forEach(message =>
+			expect(
+				precompile({
+					args: [],
+					field: "test",
+					message,
+				})(fmt)
+			).toEqual(message)
+		);
 	});
 
-	it("can use the arguments array", function(){
-		const args = [
-			"yolo",
-			"patalo",
-		];
+	it("can use the arguments array", function () {
+		const args = ["yolo", "patalo"];
 		const message = "This is {args0} then {args1}";
 
 		const render = precompile({
@@ -32,10 +31,12 @@ describe("precompile", function(){
 			field: "test",
 		});
 
-		expect(render({ rule: "test" })).toEqual(`This is ${args[0]} then ${args[1]}`)
+		expect(render({ rule: "test" })).toEqual(
+			`This is ${args[0]} then ${args[1]}`
+		);
 	});
 
-	it("can use the field name", function(){
+	it("can use the field name", function () {
 		expect(
 			precompile({
 				args: [],
@@ -45,7 +46,7 @@ describe("precompile", function(){
 		).toEqual("oh no, a test");
 	});
 
-	it("can use the rule name", function(){
+	it("can use the rule name", function () {
 		expect(
 			precompile({
 				args: [],
@@ -55,7 +56,7 @@ describe("precompile", function(){
 		).toEqual("oh no, a test");
 	});
 
-	it("removes unknown interpolation key", function(){
+	it("removes unknown interpolation key", function () {
 		expect(
 			precompile({
 				args: [],

@@ -1,4 +1,4 @@
-export { Validatueur } from "./api/index"
+export { Validatueur } from "./api/index";
 
 /* export {
 } */

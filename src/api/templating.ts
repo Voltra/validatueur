@@ -1,6 +1,6 @@
-import compile from "string-template/compile"
-import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs"
-import { Extended } from "./types"
+import compile from "string-template/compile";
+import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs";
+import { Extended } from "./types";
 
 const recordFromArgs = (args: ValidatorArgs) => {
 	const rec: Record<string, any> = {
@@ -13,7 +13,10 @@ const recordFromArgs = (args: ValidatorArgs) => {
 	return rec;
 };
 
-const defineArrayArg = (payload: Record<string, any>) => (value: string, i: number) => {
+const defineArrayArg = (payload: Record<string, any>) => (
+	value: string,
+	i: number
+) => {
 	payload[`args${i}`] = value;
 };
 
@@ -30,8 +33,9 @@ export const precompile = (args: ValidatorArgs): Formatter => {
 
 	const fmtArg = recordFromArgs(args);
 
-	return (obj: Extended<FormatArgs>) => compiled({
-		...obj,
-		...fmtArg,
-	});
+	return (obj: Extended<FormatArgs>) =>
+		compiled({
+			...obj,
+			...fmtArg,
+		});
 };
