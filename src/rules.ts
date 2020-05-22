@@ -2,7 +2,7 @@ import { Validatueur } from "./api/index";
 import { isError } from "./api/Error";
 import { isNone } from "./api/types";
 
-const empty = <T>(): Validatueur.ValidatorWrapper<T> => {
+const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 	return {
 		parent: Validatueur.none,
 		child: Validatueur.none,
@@ -12,7 +12,7 @@ const empty = <T>(): Validatueur.ValidatorWrapper<T> => {
 			return {
 				validate(
 					value: T,
-					args: Validatueur.ValidatorArgs
+					_: Validatueur.ValidatorArgs
 				): Validatueur.Result<T, Validatueur.Error> {
 					return value;
 				},
@@ -41,15 +41,13 @@ export class RuleChain<T = any, U = T> {
 
 		while (
 			!isNone(root) &&
-			!isNone((root as any).parent)
-		) // backtrack to first rule
+			!isNone((root as any).parent) // backtrack to first rule
+		)
 			root = (root as any).parent;
 
-		while (!isNone(root)) { // iterate through rules
-			const wrapper = root as Validatueur.ValidatorWrapper<
-				any,
-				any
-			>;
+		while (!isNone(root)) {
+			// iterate through rules
+			const wrapper = root as Validatueur.ValidatorWrapper<any, any>;
 
 			const { args, rule } = wrapper;
 			const messageField = `${field}.${rule}`;
@@ -74,19 +72,35 @@ export class RuleChain<T = any, U = T> {
 
 export const ruleExists = (name: string) => name in RuleChain.prototype;
 
-export const extendRules = <T = any, U = T>(
+export type RuleExtension<T = any, U = T> = (
+	...args: any[]
+) => Validatueur.Extended<RuleChain<T, U>>;
+
+export const registerExtensionRule = <T, U>(
 	name: string,
-	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
+	fn: RuleExtension<T, U>
 ) => {
 	if (ruleExists(name))
 		throw new ReferenceError(`Tried to redefine rule "${name}"`);
 
-	RuleChain.prototype[name] = function(...args: any[]) {
+	RuleChain.prototype[name] = fn;
+};
+
+export const extendRules = <T = any, U = T>(
+	name: string,
+	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
+) => {
+	return registerExtensionRule(name, function (...args: any[]) {
 		const child = fn(...args);
 		child.parent = this.root;
 		this.root.child = child;
 		return new RuleChain<T, U>(child);
-	};
+	});
 };
 
-export const rules = <T = any>() => new RuleChain<T>(empty<T>());
+/**
+ * @returns {}
+ */
+export const rules = <T = any>(): Validatueur.Extended<RuleChain<T>> => {
+	return new RuleChain<T>(noop<T>());
+};

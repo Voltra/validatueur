@@ -19,7 +19,7 @@ export class Schema {
 	) {}
 
 	public validate(values: Record<string, any>): ValidatedSchema {
-		return asSequence(Object.entries(values))
+		return (<any>asSequence(Object.entries(values)))
 			.map(([field, value]: [string, any]) => {
 				if (!(field in this.ruleSet))
 					return {

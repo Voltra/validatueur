@@ -16,8 +16,11 @@ module.exports = {
 			{
 				test: /\.tsx?$/i,
 				use: "ts-loader",
-				include: here("src"),
-				exclude: here("node_modules"),
+				include: here("src/"),
+				exclude: [
+					"node_modules/",
+					"tests/",
+				].map(here),
 			},
 		],
 	},

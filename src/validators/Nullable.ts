@@ -2,7 +2,7 @@ import { AbstractValidator } from "./AbstractValidator";
 import { Validatueur } from "../api/index";
 import { isValue } from "../utils";
 
-export class Nullable<T> extends AbstractValidator<T | null> {
+export class Nullable<T = any> extends AbstractValidator<T | null> {
 	public get rule(): string {
 		return "nullable";
 	}

@@ -1,7 +1,7 @@
 import { Validatueur } from "../api/index";
 import { isNone } from "../api/types";
 import { errorFrom } from "../api/helpers";
-import { extendRules } from "../rules"
+import { extendRules } from "../rules";
 
 export abstract class AbstractValidator<T = any, U = T>
 	implements Validatueur.Validator<T, U> {
@@ -22,14 +22,16 @@ export abstract class AbstractValidator<T = any, U = T>
 	): Validatueur.Optional<U>;
 }
 
-export const registerValidator = <T = any, U = T>(validator: AbstractValidator<T, U>) => {
+export const registerValidator = <T = any, U = T>(
+	validator: AbstractValidator<T, U>
+) => {
 	extendRules(validator.rule, (...args: any[]) => {
 		return {
 			parent: Validatueur.none,
 			child: Validatueur.none,
 			args,
 			rule: validator.rule,
-			validator(){
+			validator() {
 				return validator;
 			},
 		};

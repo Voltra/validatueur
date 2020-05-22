@@ -1,4 +1,5 @@
-import compile from "string-template/compile";
+import format from "string-template";
+// import compile from "string-template/compile";
 import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs";
 import { Extended } from "./types";
 
@@ -29,12 +30,10 @@ const defineArrayArgs = (args: string[], payload: Record<string, any>) => {
  * @param args - The arguments for the validator
  */
 export const precompile = (args: ValidatorArgs): Formatter => {
-	const compiled = compile(args.message);
-
 	const fmtArg = recordFromArgs(args);
 
 	return (obj: Extended<FormatArgs>) =>
-		compiled({
+		format(args.message, {
 			...obj,
 			...fmtArg,
 		});
