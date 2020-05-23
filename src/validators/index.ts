@@ -15,6 +15,7 @@ import {
 	asNumber,
 	asStr,
 	asDate,
+	moment,
 } from "../utils";
 
 export interface BetweenArgs {
@@ -475,5 +476,30 @@ registerExtensionRule("onLeapYear", <T = Date>(format?: string) => {
 		return asDate(value, format).isLeapYear();
 	});
 });
+
+registerExtensionRule(
+	"beforeOffsetOf",
+	<T = Date>(
+		amount?: moment.DurationInputArg1,
+		unit?: moment.DurationInputArg2,
+		format?: string
+	) => {
+		const now = asDate(undefined, format);
+		const max = now.clone().add(amount, unit);
+		return rules<T>().dateBetween(now, max, {}, format);
+	}
+);
+
+registerExtensionRule(
+	"afterOffsetOf",
+	<T = Date>(
+		amount?: moment.DurationInputArg1,
+		unit?: moment.DurationInputArg2,
+		format?: string
+	) => {
+		const min = asDate(undefined, format).add(amount, unit);
+		return rules<T>().sameOrAfter(min, format);
+	}
+);
 
 export { AbstractValidator, registerValidator };

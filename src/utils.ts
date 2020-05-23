@@ -31,7 +31,7 @@ export const asNumber = <T>(value: T) => {
 	return integer === float ? integer : float;
 };
 
-export const asDate = <T = any>(value: T, format?: string): moment.Moment => {
+export const asDate = <T = any>(value?: T, format?: string): moment.Moment => {
 	// use strict mode of moments
 	return typeof format == "string"
 		? moment(value, format, true)
@@ -84,3 +84,7 @@ export const Sanitizers = {
 		return date.format(displayFormat);
 	},
 };
+
+export {
+	moment,
+}
