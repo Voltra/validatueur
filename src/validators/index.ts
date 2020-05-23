@@ -460,14 +460,10 @@ registerExtensionRule(
 		const minDate = asDate(min, format);
 		const maxDate = asDate(max, format);
 		const boundFmt: "()" | "[)" | "(]" | "[]" = (() => {
-			if(startExcluded && endExcluded)
-				return "()";
-			else if(startExcluded)
-				return "(]";
-			else if(endExcluded)
-				return "[)";
-			else
-				return "[]";
+			if (startExcluded && endExcluded) return "()";
+			else if (startExcluded) return "(]";
+			else if (endExcluded) return "[)";
+			else return "[]";
 		})();
 
 		return rules<T>().satisfies((value: T) => {

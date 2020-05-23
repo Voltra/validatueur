@@ -1,4 +1,11 @@
-import { Extended, Result, isNone, Optional, none, ValidationPromise } from "./types";
+import {
+	Extended,
+	Result,
+	isNone,
+	Optional,
+	none,
+	ValidationPromise,
+} from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
@@ -39,13 +46,16 @@ export const sanitizerWrapperGenerator = <T = any, U = T>(
 		rule,
 		validator(): Validator<T, U> {
 			return {
-				async validate(value: T, vargs: ValidatorArgs): ValidationPromise<U, Error> {
+				async validate(
+					value: T,
+					vargs: ValidatorArgs
+				): ValidationPromise<U, Error> {
 					vargs.args = args; //replace provided arguments with already given arguments
 
-					try{
+					try {
 						const opt = await sanitizer.sanitize(value, vargs);
 						return opt;
-					}catch(_){
+					} catch (_) {
 						throw errorFrom(vargs, {
 							rule,
 						});

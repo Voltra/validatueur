@@ -74,7 +74,7 @@ export class RuleChain<T = any, U = T> {
 					field,
 					message,
 				},
-				schema,
+				schema
 			);
 
 			currentValue = result as any;
