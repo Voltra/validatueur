@@ -16,7 +16,10 @@ export interface SchemaFieldValidationResult<T = any, U = T> {
 }
 
 export class Schema {
-	public static from({ rules, messages }: SchemaArgs) {
+	public static from({
+		rules = {},
+		messages = {},
+	}: Partial<SchemaArgs> = {}) {
 		return new this(rules, messages);
 	}
 
@@ -45,10 +48,11 @@ export class Schema {
 
 	public async validate(
 		values: Record<string, any>
-	): Promise<ValidatedSchema> {
+	): Validatueur.Promise<ValidatedSchema> {
 		const ret: ValidatedSchema = {
 			errors: [],
 			values: {},
+			valid: false,
 		};
 
 		for (const [field, value] of Object.entries(values)) {
@@ -56,10 +60,14 @@ export class Schema {
 				const newValue = await this.__validateField(field, value);
 				ret.values[field] = newValue;
 			} catch (error) {
-				ret.errors.push(error);
+				if(Array.isArray(error))
+					ret.errors.push(...error);
+				else
+					ret.errors.push(error);
 			}
 		}
 
+		ret.valid = ret.errors.length <= 0;
 		return ret;
 	}
 }

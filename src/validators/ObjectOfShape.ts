@@ -19,6 +19,11 @@ export class ObjectOfShape<T = any> extends AbstractValidator<
 	): Validatueur.Promise<Record<string, any>> {
 		await noneIf(typeof value !== "object", value);
 
-		return objectSchema.validate(value);
+		const { errors, values, valid } = await objectSchema.validate(value);
+
+		if(valid)
+			return values;
+		else
+			throw errors;
 	}
 }
