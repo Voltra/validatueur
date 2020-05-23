@@ -85,6 +85,4 @@ export const Sanitizers = {
 	},
 };
 
-export {
-	moment,
-}
+export { moment };
