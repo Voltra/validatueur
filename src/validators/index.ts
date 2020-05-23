@@ -13,7 +13,23 @@ import { Nullable } from "./Nullable";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
-import { registerExtensionRule, rules, RuleChain } from "../rules";
+import { registerExtensionRule, rules } from "../rules";
+import { Validatueur } from "../api/index";
+
+export interface BetweenArgs{
+	start: number,
+	end: number,
+	endExclusive: boolean|undefined,
+	startExclusive: boolean|undefined,
+}
+
+export interface PasswordArgs extends BetweenArgs{
+	min: number,
+	max: number,
+	endExclusive: boolean,
+	startExclusive: boolean,
+	useMax: boolean,
+}
 
 /****************************************************************************\
  * Generic
@@ -27,7 +43,7 @@ registerValidator(new Required());
 // sameAs(fieldName)
 registerValidator(new SameAs());
 
-// anyOfChains(...ruleChains)
+// anyOfRules(...ruleChains)
 registerValidator(new AnyOfRules());
 
 /****************************************************************************\
@@ -39,14 +55,22 @@ registerValidator(new Max<number>());
 // min(n, exclusive=false)
 registerValidator(new Min<number>());
 
+/*
+	between({
+		start,
+		end,
+		endExclusive=true,
+		startExclusive=false,
+	})
+*/
 registerExtensionRule(
 	"between",
-	(
-		start: number,
-		end: number,
-		endExclusive: boolean = true,
-		startExclusive: boolean = false
-	) => {
+	({
+		start,
+		end,
+		endExclusive = true,
+		startExclusive = false
+	}: BetweenArgs) => {
 		return rules<number>()
 			.min(start, startExclusive)
 			.max(end, endExclusive);
@@ -65,14 +89,22 @@ registerValidator(new MaxLength<string>());
 // minLength(n, exclusive=false)
 registerValidator(new MinLength<string>());
 
+/*
+	lengthBetween({
+		start,
+		end,
+		endExclusive=true,
+		startExclusive=false,
+	})
+*/
 registerExtensionRule(
 	"lengthBetween",
-	(
-		start: number,
-		end: number,
-		endExclusive: boolean = true,
-		startExclusive: boolean = false
-	) => {
+	({
+		start,
+		end,
+		endExclusive = true,
+		startExclusive = false
+	}: BetweenArgs) => {
 		return rules<string>()
 			.minLength(start, startExclusive)
 			.maxLength(end, endExclusive);
@@ -94,22 +126,37 @@ registerValidator(new HasDigit<string>());
 // hasSpecialCharacter()
 registerValidator(new HasSpecialCharacter<string>());
 
+/*
+	password({
+		min=8,
+		max=100,
+		endExclusive=true,
+		startExclusive=false,
+		useMax=true,
+	})
+*/
 registerExtensionRule(
 	"password",
-	(
-		min: number = 8,
-		max: number = 100,
-		endExclusive: boolean = true,
-		startExclusive: boolean = false
-	) => {
-		return rules<string>()
-			.minLength(min, startExclusive)
-			.maxLength(max, endExclusive)
-			.hasUppercaseLetter()
-			.hasLowercaseLetter()
-			.hasNumber()
-			.hasSpecialCharacter();
+	({
+		min = 8,
+		max = 100,
+		endExclusive = true,
+		startExclusive = false,
+		useMax = true,
+	}: Partial<PasswordArgs> = {}) => {
+		const chain = rules<string>()
+					.hasUppercaseLetter()
+					.hasLowercaseLetter()
+					.hasNumber()
+					.hasSpecialCharacter()
+					.minLength(min, startExclusive)
+
+		return useMax ? chain.maxLength(max, endExclusive) : chain;
 	}
 );
 
-export * from "./AbstractValidator";
+
+export {
+	AbstractValidator,
+	registerValidator,
+}

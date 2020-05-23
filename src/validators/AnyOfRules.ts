@@ -9,14 +9,19 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 	public get rule(): string {
 		return "anyOfRules";
 	}
-	protected __validate(
+	protected async __validate(
 		field: string,
 		value: T,
 		schema: Schema,
 		...chains: RuleChain[]
 	): Validatueur.Promise<U> {
-		return Promise.race(
-			chains.map(chain => chain.__validate(field, value, schema))
-		);
+		for(const chain of chains){
+			try{
+				const ret = await chain.__validate(field, value, schema);
+				return ret;
+			}catch(e){
+				continue;
+			}
+		}
 	}
 }
