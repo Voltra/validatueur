@@ -1,5 +1,6 @@
 import { Regex } from "./Regex";
 import { Validatueur } from "../index";
+import { RegularExpressions } from "../utils";
 
 export class HasSpecialCharacter<T = string> extends Regex<T> {
 	public get rule() {
@@ -7,13 +8,14 @@ export class HasSpecialCharacter<T = string> extends Regex<T> {
 	}
 
 	protected __validate(
+		field: string,
 		value: T,
 		schema: Validatueur.Schema
 	): Validatueur.Optional<string> {
 		return super.__validate(
 			value,
 			schema,
-			/[\.!\?\[\]\(\)\{\}\<\>\^\$€#@,;:\-_%&~"'\|`=]/,
+			RegularExpressions.specialCharacter,
 			false
 		);
 	}

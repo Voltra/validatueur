@@ -7,6 +7,7 @@ export class Min<T = number> extends AbstractValidator<T, number> {
 		return "min";
 	}
 	protected __validate(
+		field: string,
 		value: T,
 		schema: Validatueur.Schema,
 		min: number,

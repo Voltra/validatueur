@@ -7,6 +7,7 @@ export class NotNaN<T = number> extends AbstractValidator<T, number> {
 		return "notNaN";
 	}
 	protected __validate(
+		field: string,
 		value: T,
 		schema: Validatueur.Schema,
 		...args: any[]

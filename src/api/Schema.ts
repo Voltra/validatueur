@@ -9,9 +9,9 @@ export interface SchemaArgs {
 	messages: Record<string, string>;
 }
 
-export interface SchemaFieldValidationResult<T = any, U = T>{
-	field: string,
-	result: Validatueur.Result<U, Validatueur.Error>,
+export interface SchemaFieldValidationResult<T = any, U = T> {
+	field: string;
+	result: Validatueur.Result<U, Validatueur.Error>;
 }
 
 export class Schema {
@@ -24,7 +24,10 @@ export class Schema {
 		public readonly messages: Record<string, string>
 	) {}
 
-	public __validateField(field: string, value: any): SchemaFieldValidationResult{
+	public __validateField(
+		field: string,
+		value: any
+	): SchemaFieldValidationResult {
 		if (!(field in this.ruleSet))
 			return {
 				field,
@@ -35,7 +38,7 @@ export class Schema {
 
 		return {
 			field,
-			result
+			result,
 		};
 	}
 

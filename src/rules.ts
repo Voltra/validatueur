@@ -11,8 +11,10 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 		validator(): Validatueur.Validator<T> {
 			return {
 				validate(
+					_field: string,
 					value: T,
-					_: Validatueur.ValidatorArgs
+					_vargs: Validatueur.ValidatorArgs,
+					_schema: Validatueur.Schema,
 				): Validatueur.Result<T, Validatueur.Error> {
 					return value;
 				},
@@ -26,10 +28,10 @@ export class RuleChain<T = any, U = T> {
 
 	public __getFirst<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
 		// backtrack to first rule
-		let first = this.root as any as Validatueur.ValidatorWrapper<A, B>;
+		let first = (this.root as any) as Validatueur.ValidatorWrapper<A, B>;
 
 		while (!isNone(first.parent))
-			first = first.parent as any as Validatueur.ValidatorWrapper<A, B>;
+			first = (first.parent as any) as Validatueur.ValidatorWrapper<A, B>;
 
 		return first;
 	}
@@ -67,6 +69,7 @@ export class RuleChain<T = any, U = T> {
 					: "";
 
 			const result = wrapper.validator().validate(
+				field,
 				currentValue,
 				{
 					args,

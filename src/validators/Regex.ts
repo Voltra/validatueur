@@ -7,6 +7,7 @@ export class Regex<T = string> extends AbstractValidator<T, string> {
 	}
 
 	protected __validate(
+		field: string,
 		value: T,
 		schema: Validatueur.Schema,
 		re: RegExp,

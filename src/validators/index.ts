@@ -1,4 +1,5 @@
 import { AbstractValidator, registerValidator } from "./AbstractValidator";
+import { AnyOfRules } from "./AnyOfRules";
 import { HasDigit } from "./HasDigit";
 import { HasLowercaseLetter } from "./HasLowercaseLetter";
 import { HasSpecialCharacter } from "./HasSpecialCharacter";
@@ -12,7 +13,7 @@ import { Nullable } from "./Nullable";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
-import { registerExtensionRule, rules } from "../rules";
+import { registerExtensionRule, rules, RuleChain } from "../rules";
 
 /****************************************************************************\
  * Generic
@@ -26,7 +27,8 @@ registerValidator(new Required());
 // sameAs(fieldName)
 registerValidator(new SameAs());
 
-
+// anyOfChains(...ruleChains)
+registerValidator(new AnyOfRules());
 
 /****************************************************************************\
  * Numbers
@@ -45,7 +47,9 @@ registerExtensionRule(
 		endExclusive: boolean = true,
 		startExclusive: boolean = false
 	) => {
-		return rules().min(start, startExclusive).max(end, endExclusive);
+		return rules<number>()
+			.min(start, startExclusive)
+			.max(end, endExclusive);
 	}
 );
 

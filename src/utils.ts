@@ -26,3 +26,10 @@ export const asNumber = <T>(value: T) => {
 	// (e.g. greater precision for integers)
 	return integer === float ? integer : float;
 };
+
+export const RegularExpressions = {
+	digit: /[0-9]/,
+	lowercaseLetter: /[a-z]/,
+	uppercaseLetter: /[A-Z]/,
+	specialCharacter: /[\/\.!\?\[\]\(\)\{\}\<\>\^\$€#@,;:\-_%&~"'`\|=\+\*]/,
+};
