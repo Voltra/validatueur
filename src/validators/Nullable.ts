@@ -10,13 +10,13 @@ export class Nullable<T = any> extends AbstractValidator<T | null> {
 		return "nullable";
 	}
 
-	protected async __validate(
+	protected __validate(
 		field: string,
 		value: T | null,
 		schema: Validatueur.Schema,
 		rules: RuleChain<T>
 	): Validatueur.Promise<T | null> {
-		if (!isValue(value)) return null;
+		if (!isValue(value)) return Promise.resolve(null);
 
 		return rules.__validate(field, value as T, schema);
 	}

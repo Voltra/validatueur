@@ -464,7 +464,7 @@ registerExtensionRule(
 				minDate,
 				maxDate,
 				unit,
-				boundFmt
+				boundFmt,
 			);
 		});
 	}
