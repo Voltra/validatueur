@@ -46,11 +46,11 @@ export class RuleChain<T = any, U = T> {
 		return last;
 	}
 
-	public __validate(
+	public async __validate(
 		field: string,
 		value: T,
 		schema: Validatueur.Schema
-	): Validatueur.Result<any, Validatueur.Error> {
+	): Validatueur.Promise<any, Validatueur.Error> {
 		let currentValue: any = value;
 		let root: Validatueur.Optional<Validatueur.ValidatorWrapper<
 			any,
@@ -68,21 +68,23 @@ export class RuleChain<T = any, U = T> {
 					? schema.messages[messageField]
 					: "";
 
-			const result = wrapper.validator().validate(
-				field,
-				currentValue,
-				{
-					args,
+			try{
+				const result = await wrapper.validator().validate(
 					field,
-					message,
-				},
-				schema
-			);
+					currentValue,
+					{
+						args,
+						field,
+						message,
+					},
+					schema
+				);
 
-			if (isError(result)) return result; // exit early on failure
-
-			currentValue = result as any;
-			root = wrapper.child;
+				currentValue = result as any;
+				root = wrapper.child;
+			}catch(e){
+				return e; // exit early on failure
+			}
 		}
 
 		return currentValue;

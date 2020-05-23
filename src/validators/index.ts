@@ -16,19 +16,19 @@ import { SameAs } from "./SameAs";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
 
-export interface BetweenArgs{
-	start: number,
-	end: number,
-	endExclusive: boolean|undefined,
-	startExclusive: boolean|undefined,
+export interface BetweenArgs {
+	start: number;
+	end: number;
+	endExclusive: boolean | undefined;
+	startExclusive: boolean | undefined;
 }
 
-export interface PasswordArgs extends BetweenArgs{
-	min: number,
-	max: number,
-	endExclusive: boolean,
-	startExclusive: boolean,
-	useMax: boolean,
+export interface PasswordArgs extends BetweenArgs {
+	min: number;
+	max: number;
+	endExclusive: boolean;
+	startExclusive: boolean;
+	useMax: boolean;
 }
 
 /****************************************************************************\
@@ -69,7 +69,7 @@ registerExtensionRule(
 		start,
 		end,
 		endExclusive = true,
-		startExclusive = false
+		startExclusive = false,
 	}: BetweenArgs) => {
 		return rules<number>()
 			.min(start, startExclusive)
@@ -103,7 +103,7 @@ registerExtensionRule(
 		start,
 		end,
 		endExclusive = true,
-		startExclusive = false
+		startExclusive = false,
 	}: BetweenArgs) => {
 		return rules<string>()
 			.minLength(start, startExclusive)
@@ -145,18 +145,14 @@ registerExtensionRule(
 		useMax = true,
 	}: Partial<PasswordArgs> = {}) => {
 		const chain = rules<string>()
-					.hasUppercaseLetter()
-					.hasLowercaseLetter()
-					.hasNumber()
-					.hasSpecialCharacter()
-					.minLength(min, startExclusive)
+			.hasUppercaseLetter()
+			.hasLowercaseLetter()
+			.hasNumber()
+			.hasSpecialCharacter()
+			.minLength(min, startExclusive);
 
 		return useMax ? chain.maxLength(max, endExclusive) : chain;
 	}
 );
 
-
-export {
-	AbstractValidator,
-	registerValidator,
-}
+export { AbstractValidator, registerValidator };

@@ -3,7 +3,7 @@ import {
 	Result as _Result,
 	None as _None,
 	Extended as _Extended,
-	Promise as _Promise,
+	ValidationPromise as _Promise,
 	none as _none,
 	noneIf as _noneIf,
 } from "./types";

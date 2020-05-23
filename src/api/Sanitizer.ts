@@ -1,6 +1,6 @@
-import { Optional, Promise } from "./types";
+import { Optional, ValidationPromise } from "./types";
 import { ValidatorArgs } from "./ValidatorArgs";
 
 export interface Sanitizer<T, U = T> {
-	sanitize(value: T, args: ValidatorArgs): Promise<U>;
+	sanitize(value: T, args: ValidatorArgs): ValidationPromise<U>;
 }

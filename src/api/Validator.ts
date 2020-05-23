@@ -1,10 +1,10 @@
-import { Result, Optional, Promise } from "./types";
+import { Result, Optional, ValidationPromise } from "./types";
 import { Error } from "./Error";
 import { ValidatorArgs } from "./ValidatorArgs";
 import { Schema } from "./Schema";
 
 export interface Validator<T = any, U = T> {
-	validate(value: T, args: ValidatorArgs, schema: Schema): Promise<U, Error>;
+	validate(value: T, args: ValidatorArgs, schema: Schema): ValidationPromise<U, Error>;
 }
 
 export interface ValidatorWrapper<T = any, U = T> {

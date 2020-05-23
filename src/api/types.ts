@@ -24,12 +24,12 @@ export const isNone = <T>(opt: Optional<T>) => {
 	return opt === none;
 };
 
-export type Promise<T = any, E = any> = PromiseLike<T>;
+export type ValidationPromise<T = any, E = any> = Promise<T>;
 
 export const noneIf = async <T>(
 	condition: boolean,
 	value: T
-): Promise<T, None> => {
+): ValidationPromise<T, None> => {
 	if (condition) return value;
 
 	throw none;
