@@ -9,7 +9,13 @@ import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
-import { contains, RegularExpressions, asNumber, asStr, asDate } from "../utils";
+import {
+	contains,
+	RegularExpressions,
+	asNumber,
+	asStr,
+	asDate,
+} from "../utils";
 
 export interface BetweenArgs {
 	start: number;
@@ -409,8 +415,6 @@ registerExtensionRule("doesNotContain", <T = string>(substr: string) => {
 	});
 });
 
-
-
 /****************************************************************************\
  * Dates
 \****************************************************************************/
@@ -442,17 +446,33 @@ registerExtensionRule("sameOrBefore", <T = Date>(min: any, format?: string) => {
 	});
 });
 
-registerExtensionRule("dateBetween", <T = Date>(min: any, max: any, {
-	startExcluded = false,
-	endExcluded = true,
-	unit = undefined,
-} = {}, format?: string) => {
-	const minDate = asDate(min, format);
-	const maxDate = asDate(max, format);
-	const boundFmt = (startExcluded ? "(" : "[") + (endExcluded ? ")" : "]");
+registerExtensionRule(
+	"dateBetween",
+	<T = Date>(
+		min: any,
+		max: any,
+		{ startExcluded = false, endExcluded = true, unit = undefined } = {},
+		format?: string
+	) => {
+		const minDate = asDate(min, format);
+		const maxDate = asDate(max, format);
+		const boundFmt =
+			(startExcluded ? "(" : "[") + (endExcluded ? ")" : "]");
 
-	return rules<T>().satisfies((value: T) => {
-		return asDate(value, format).isBetween(minDate, maxDate, unit, boundFmt);
+		return rules<T>().satisfies((value: T) => {
+			return asDate(value, format).isBetween(
+				minDate,
+				maxDate,
+				unit,
+				boundFmt
+			);
+		});
+	}
+);
+
+registerExtensionRule("onLeapYear", <T = Date>(format?: string) => {
+	return rules<T>().satisifes((value: T) => {
+		return asDate(value, format).isLeapYear();
 	});
 });
 
