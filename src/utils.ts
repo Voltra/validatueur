@@ -1,4 +1,5 @@
 import { isNone } from "./api/types";
+import { Validatueur } from "./api/index";
 
 export const isEmpty = (str: string) => /^\s*$/.test(str);
 
@@ -32,4 +33,25 @@ export const RegularExpressions = {
 	lowercaseLetter: /[a-z]/,
 	uppercaseLetter: /[A-Z]/,
 	specialCharacter: /[\/\.!\?\[\]\(\)\{\}\<\>\^\$€#@,;:\-_%&~"'`\|=\+\*]/,
+};
+
+export const Sanitizers = {
+	//// Utils
+	__isNaN(value: number){
+		return isNaN(value);
+	},
+
+	//// Sanitizer
+	number<T>(value: T){
+		const nb = asNumber(value);
+		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
+	},
+	integer(value, base: number = 10){
+		const nb = parseInt(value, base);
+		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
+	},
+	float(value){
+		const nb = parseFloat(value);
+		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
+	}
 };

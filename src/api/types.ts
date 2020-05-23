@@ -23,3 +23,7 @@ export type Extended<T> = T & { [key: string]: any };
 export const isNone = <T>(opt: Optional<T>) => {
 	return opt === none;
 };
+
+export const noneIf = <T>(condition: (t: T) => boolean, value: T): Optional<T> => {
+	return condition(value) ? none : value;
+};

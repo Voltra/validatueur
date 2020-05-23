@@ -4,6 +4,7 @@ import {
 	None as _None,
 	Extended as _Extended,
 	none as _none,
+	noneIf as _noneIf,
 } from "./types";
 import { Messages as _Messages } from "./Messages";
 import { Error as _Error } from "./Error";
@@ -25,6 +26,7 @@ export namespace Validatueur {
 	export type Result<T, E> = _Result<T, E>;
 	export type Extended<T> = _Extended<T>;
 	export const none = _none;
+	export const noneIf = _noneIf;
 
 	export type Messages = _Messages;
 	export type Error = _Error;
