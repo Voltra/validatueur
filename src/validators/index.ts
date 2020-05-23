@@ -1,10 +1,6 @@
 import { AbstractValidator, registerValidator } from "./AbstractValidator";
 import { AnyOfRules } from "./AnyOfRules";
 import { ArrayOf } from "./ArrayOf";
-import { HasDigit } from "./HasDigit";
-import { HasLowercaseLetter } from "./HasLowercaseLetter";
-import { HasSpecialCharacter } from "./HasSpecialCharacter";
-import { HasUppercaseLetter } from "./HasUppercaseLetter";
 import { Max } from "./Max";
 import { MaxLength } from "./MaxLength";
 import { Min } from "./Min";
@@ -17,7 +13,7 @@ import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
-import { contains } from "../utils";
+import { contains, RegularExpressions } from "../utils";
 
 export interface BetweenArgs {
 	start: number;
@@ -280,25 +276,36 @@ registerExtensionRule(
 );
 
 // regex(pattern, fullMatch=true)
-registerExtensionRule("regex", <T = any>(pattern: RegExp, fullMatch: boolean = true) => {
-	return rules().satisfies((value: T) => {
-		const str = `${value}`;
-		const validates = fullMatch ? pattern.test(str) : !!str.match(pattern);
-		return Validatueur.noneIf(!validates, str);
-	});
-});
+registerExtensionRule(
+	"regex",
+	<T = any>(pattern: RegExp, fullMatch: boolean = true) => {
+		return rules<T>().satisfies((value: T) => {
+			const str = `${value}`;
+			const validates = fullMatch
+				? pattern.test(str)
+				: !!str.match(pattern);
+			return Validatueur.noneIf(!validates, str);
+		});
+	}
+);
+
+export const registerRegexRule = (name: string, patternFactory: () => RegExp, fullMatch: boolean = false) => {
+	registerExtensionRule(name, <T>() => {
+		return rules<T>().regex(patternFactory(), fullMatch);
+	})
+};
 
 // hasUppercaseLetter()
-registerValidator(new HasUppercaseLetter<string>());
+registerRegexRule("hasUppercaseLetter", () => RegularExpressions.uppercaseLetter);
 
 // hasLowercaseLetter()
-registerValidator(new HasLowercaseLetter<string>());
+registerRegexRule("hasDigit", () => RegularExpressions.lowercaseLetter);
 
 // hasDigit()
-registerValidator(new HasDigit<string>());
+registerRegexRule("hasDigit", () => RegularExpressions.digit);
 
 // hasSpecialCharacter()
-registerValidator(new HasSpecialCharacter<string>());
+registerRegexRule("hasSpecialCharacter", () => RegularExpressions.specialCharacter);
 
 /*
 	password({
