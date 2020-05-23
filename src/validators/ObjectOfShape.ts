@@ -21,9 +21,7 @@ export class ObjectOfShape<T = any> extends AbstractValidator<
 
 		const { errors, values, valid } = await objectSchema.validate(value);
 
-		if(valid)
-			return values;
-		else
-			throw errors;
+		if (valid) return values;
+		else throw errors;
 	}
 }

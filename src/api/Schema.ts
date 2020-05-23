@@ -60,10 +60,8 @@ export class Schema {
 				const newValue = await this.__validateField(field, value);
 				ret.values[field] = newValue;
 			} catch (error) {
-				if(Array.isArray(error))
-					ret.errors.push(...error);
-				else
-					ret.errors.push(error);
+				if (Array.isArray(error)) ret.errors.push(...error);
+				else ret.errors.push(error);
 			}
 		}
 
