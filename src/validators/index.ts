@@ -12,7 +12,6 @@ import { MinLength } from "./MinLength";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
 import { ObjectOfShape } from "./ObjectOfShape";
-import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
@@ -177,22 +176,6 @@ registerExtensionRule("isNot", <T = any>(expected: any) => {
 	return rules<T>().satisfies((value: T) => value !== expected);
 });
 
-registerExtensionRule("lessThan", <T = any>(max: any) => {
-	return rules<T>().satisfies((value: T) => value < max);
-});
-
-registerExtensionRule("lessThanOrEqualTo", <T = any>(max: any) => {
-	return rules<T>().satisfies((value: T) => value <= max);
-});
-
-registerExtensionRule("greaterThan", <T = any>(min: any) => {
-	return rules<T>().satisfies((value: T) => value > min);
-});
-
-registerExtensionRule("greaterThanOrEqualTo", <T = any>(min: any) => {
-	return rules<T>().satisfies((value: T) => value >= min);
-});
-
 /****************************************************************************\
  * Numbers
 \****************************************************************************/
@@ -246,6 +229,22 @@ registerExtensionRule(
 	}
 );
 
+registerExtensionRule("lessThan", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value < max);
+});
+
+registerExtensionRule("lessThanOrEqualTo", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value <= max);
+});
+
+registerExtensionRule("greaterThan", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value > min);
+});
+
+registerExtensionRule("greaterThanOrEqualTo", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value >= min);
+});
+
 // notNaN()
 registerValidator(new NotNaN<number>());
 
@@ -281,7 +280,13 @@ registerExtensionRule(
 );
 
 // regex(pattern, fullMatch=true)
-registerValidator(new Regex<string>());
+registerExtensionRule("regex", <T = any>(pattern: RegExp, fullMatch: boolean = true) => {
+	return rules().satisfies((value: T) => {
+		const str = `${value}`;
+		const validates = fullMatch ? pattern.test(str) : !!str.match(pattern);
+		return Validatueur.noneIf(!validates, str);
+	});
+});
 
 // hasUppercaseLetter()
 registerValidator(new HasUppercaseLetter<string>());
