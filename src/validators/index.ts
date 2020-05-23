@@ -16,6 +16,7 @@ import {
 	asStr,
 	asDate,
 	moment,
+	now,
 } from "../utils";
 
 export interface BetweenArgs {
@@ -484,9 +485,9 @@ registerExtensionRule(
 		unit?: moment.DurationInputArg2,
 		format?: string
 	) => {
-		const now = asDate(undefined, format);
-		const max = now.clone().add(amount, unit);
-		return rules<T>().dateBetween(now, max, {}, format);
+		const now_ = now();
+		const max = now_.clone().add(amount, unit);
+		return rules<T>().dateBetween(now_, max, {}, format);
 	}
 );
 
@@ -497,7 +498,7 @@ registerExtensionRule(
 		unit?: moment.DurationInputArg2,
 		format?: string
 	) => {
-		const min = asDate(undefined, format).add(amount, unit);
+		const min = now().add(amount, unit);
 		return rules<T>().sameOrAfter(min, format);
 	}
 );

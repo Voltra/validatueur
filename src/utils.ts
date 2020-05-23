@@ -38,6 +38,10 @@ export const asDate = <T = any>(value?: T, format?: string): moment.Moment => {
 		: moment(value, true);
 };
 
+export const now = <T = any>(): ReturnType<typeof asDate> => {
+	return asDate(undefined);
+}
+
 export const RegularExpressions = {
 	digit: /[0-9]/,
 	lowercaseLetter: /[a-z]/,
