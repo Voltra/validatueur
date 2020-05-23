@@ -12,10 +12,10 @@ export class Max<T = number> extends AbstractValidator<T, number> {
 		schema: Validatueur.Schema,
 		max: number,
 		exclusive: boolean = true
-	): Validatueur.Optional<number> {
+	): Validatueur.Promise<number> {
 		const nb = asNumber(value);
 		const validates = exclusive ? nb < max : nb <= max;
 
-		if (validates) return nb;
+		return Validatueur.noneIf(!validates, nb);
 	}
 }

@@ -12,10 +12,10 @@ export class Regex<T = string> extends AbstractValidator<T, string> {
 		schema: Validatueur.Schema,
 		re: RegExp,
 		full: boolean = false
-	): Validatueur.Optional<string> {
+	): Validatueur.Promise<string> {
 		const str = `${value}`;
 		const validates = full ? re.test(str) : !!str.match(str);
-		if (validates) return str;
+		return Validatueur.noneIf(!validates, str);
 	}
 }
 

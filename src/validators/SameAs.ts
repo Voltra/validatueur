@@ -14,7 +14,6 @@ export class SameAs<T = any> extends AbstractValidator<T, any> {
 		schema: Schema,
 		otherField: string
 	) {
-		const { result } = schema.__validateField(otherField, value);
-		if (!isError(result)) return result as any;
+		return schema.__validateField(otherField, value);
 	}
 }

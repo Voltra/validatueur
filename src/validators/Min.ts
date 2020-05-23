@@ -12,9 +12,10 @@ export class Min<T = number> extends AbstractValidator<T, number> {
 		schema: Validatueur.Schema,
 		min: number,
 		exclusive: boolean = false
-	): Validatueur.Optional<number> {
+	): Validatueur.Promise<number> {
 		const nb = asNumber(value);
 		const validates = exclusive ? nb > min : nb >= min;
-		if (validates) return nb;
+
+		return Validatueur.noneIf(!validates, nb);
 	}
 }

@@ -11,7 +11,7 @@ export class Required<T = any> extends AbstractValidator<T> {
 		field: string,
 		value: T,
 		schema: Validatueur.Schema
-	): Validatueur.Optional<T> {
-		if (isValue(value)) return value;
+	): Validatueur.Promise<T> {
+		return Validatueur.noneIf(!isValue(value), value);
 	}
 }

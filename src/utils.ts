@@ -37,21 +37,21 @@ export const RegularExpressions = {
 
 export const Sanitizers = {
 	//// Utils
-	__isNaN(value: number){
+	__isNaN(value: number) {
 		return isNaN(value);
 	},
 
 	//// Sanitizer
-	number<T>(value: T){
+	number<T>(value: T) {
 		const nb = asNumber(value);
-		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
+		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
-	integer(value, base: number = 10){
+	integer(value, base: number = 10) {
 		const nb = parseInt(value, base);
-		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
+		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
-	float(value){
+	float(value) {
 		const nb = parseFloat(value);
-		return Validatueur.noneIf(Sanitizers.__isNaN, nb);
-	}
+		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
+	},
 };

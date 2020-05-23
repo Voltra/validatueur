@@ -13,9 +13,9 @@ export class MinLength<T = string> extends AbstractValidator<T, string> {
 		schema: Validatueur.Schema,
 		min: number,
 		exclusive: boolean = false
-	): Validatueur.Optional<string> {
+	): Validatueur.Promise<string> {
 		const str = asStr(value);
 		const validates = exclusive ? str.length > min : str.length >= min;
-		if (str.length >= min) return str;
+		return Validatueur.noneIf(!validates, str);
 	}
 }

@@ -3,19 +3,19 @@ import { isNone } from "../api/types";
 import { errorFrom } from "../api/helpers";
 import { extendRules } from "../rules";
 
-//TODO: Maybe refactor __validate interface to return result (would allow error impersonation)
-
 export abstract class AbstractValidator<T = any, U = T>
 	implements Validatueur.Validator<T, U> {
-	public validate(
+	public async validate(
 		value: T,
 		args: Validatueur.ValidatorArgs,
 		schema: Validatueur.Schema
-	): Validatueur.Result<U, Validatueur.Error> {
-		const opt = this.__validate(args.field, value, schema, args.args);
-		if (isNone(opt)) return errorFrom(args, this);
-
-		return opt as U;
+	): Validatueur.Promise<U, Validatueur.Error> {
+		try{
+			const ret = await this.__validate(args.field, value, schema, args.args);
+			return ret;
+		}catch(_){ //TODO: Maybe refactor __validate interface to return result (instead of optional), would allow "error impersonation"
+			throw errorFrom(args, this);
+		}
 	}
 
 	public abstract get rule(): string;
@@ -25,7 +25,7 @@ export abstract class AbstractValidator<T = any, U = T>
 		value: T,
 		schema: Validatueur.Schema,
 		...args: any[]
-	): Validatueur.Optional<U>;
+	): Validatueur.Promise<U>;
 }
 
 export const registerValidator = <T = any, U = T>(

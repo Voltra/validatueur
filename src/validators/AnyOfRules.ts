@@ -14,14 +14,9 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 		value: T,
 		schema: Schema,
 		...chains: RuleChain[]
-	): Validatueur.Optional<U> {
-		const ret = asSequence(chains)
-			.map((chain: RuleChain) => chain.__validate(field, value, schema))
-			.find(
-				(result: Validatueur.Result<any, Validatueur.Error>) =>
-					!isError(result)
-			);
-
-		if (ret !== null) return ret as U;
+	): Validatueur.Promise<U> {
+		return Promise.race(
+			chains.map(chain => chain.__validate(field, value, schema))
+		);
 	}
 }

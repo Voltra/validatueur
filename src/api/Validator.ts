@@ -1,13 +1,13 @@
-import { Result, Optional } from "./types";
+import { Result, Optional, Promise } from "./types";
 import { Error } from "./Error";
 import { ValidatorArgs } from "./ValidatorArgs";
 import { Schema } from "./Schema";
 
-export interface Validator<T, U = T> {
-	validate(value: T, args: ValidatorArgs, schema: Schema): Result<U, Error>;
+export interface Validator<T = any, U = T> {
+	validate(value: T, args: ValidatorArgs, schema: Schema): Promise<U, Error>;
 }
 
-export interface ValidatorWrapper<T, U = T> {
+export interface ValidatorWrapper<T = any, U = T> {
 	parent: Optional<ValidatorWrapper<any, T>>;
 	child: Optional<ValidatorWrapper<U, any>>;
 	args: any[];

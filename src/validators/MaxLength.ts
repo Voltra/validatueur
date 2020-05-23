@@ -12,11 +12,11 @@ export class MaxLength<T = string> extends AbstractValidator<T, string> {
 		schema: Validatueur.Schema,
 		max: number,
 		exclusive: boolean = true
-	): Validatueur.Optional<string> {
+	): Validatueur.Promise<string> {
 		const str = asStr(value);
 
 		const validates = exclusive ? str.length < max : str.length <= max;
 
-		if (validates) return str;
+		return Validatueur.noneIf(!validates, str);
 	}
 }

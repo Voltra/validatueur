@@ -24,6 +24,14 @@ export const isNone = <T>(opt: Optional<T>) => {
 	return opt === none;
 };
 
-export const noneIf = <T>(condition: (t: T) => boolean, value: T): Optional<T> => {
-	return condition(value) ? none : value;
+export type Promise<T = any, E = any> = PromiseLike<T>;
+
+export const noneIf = async <T>(
+	condition: boolean,
+	value: T
+): Promise<T, None> => {
+	if(condition)
+		return value;
+
+	throw none;
 };

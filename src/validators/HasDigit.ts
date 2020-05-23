@@ -12,6 +12,6 @@ export class HasDigit<T = string> extends Regex<T> {
 		value: T,
 		schema: Validatueur.Schema
 	): Validatueur.Optional<string> {
-		return super.__validate(value, schema, RegularExpressions.digit, false);
+		return super.__validate(field, value, schema, RegularExpressions.digit, false);
 	}
 }

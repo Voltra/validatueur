@@ -11,8 +11,9 @@ export class HasSpecialCharacter<T = string> extends Regex<T> {
 		field: string,
 		value: T,
 		schema: Validatueur.Schema
-	): Validatueur.Optional<string> {
+	): Validatueur.Promise<string> {
 		return super.__validate(
+			field,
 			value,
 			schema,
 			RegularExpressions.specialCharacter,

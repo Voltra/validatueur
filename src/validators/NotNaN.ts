@@ -1,6 +1,8 @@
 import { AbstractValidator } from "./AbstractValidator";
 import { Validatueur } from "../api/index";
-import { asNumber } from "../utils";
+import { asNumber, Sanitizers } from "../utils";
+
+//TODO: Move to sanitizers
 
 export class NotNaN<T = number> extends AbstractValidator<T, number> {
 	public get rule(): string {
@@ -11,8 +13,8 @@ export class NotNaN<T = number> extends AbstractValidator<T, number> {
 		value: T,
 		schema: Validatueur.Schema,
 		...args: any[]
-	): Validatueur.Optional<number> {
+	): Validatueur.Promise<number> {
 		const nb = asNumber(value);
-		if (!isNaN(nb)) return nb;
+		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	}
 }

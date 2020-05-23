@@ -3,10 +3,11 @@ import { ValidatedSchema } from "./ValidatedSchema";
 import { RuleChain } from "../rules";
 import { asSequence } from "sequency";
 import { Validatueur } from "./index";
+import { Messages } from "./Messages"
 
 export interface SchemaArgs {
 	rules: Record<string, RuleChain>;
-	messages: Record<string, string>;
+	messages: Messages;
 }
 
 export interface SchemaFieldValidationResult<T = any, U = T> {
@@ -21,20 +22,20 @@ export class Schema {
 
 	protected constructor(
 		public readonly ruleSet: Record<string, RuleChain>,
-		public readonly messages: Record<string, string>
+		public readonly messages: Messages
 	) {}
 
-	public __validateField(
+	public async __validateField(
 		field: string,
 		value: any
-	): SchemaFieldValidationResult {
+	): Promise<SchemaFieldValidationResult> {
 		if (!(field in this.ruleSet))
 			return {
 				field,
 				result: value,
 			};
 
-		const result = this.ruleSet[field].__validate(field, value, this);
+		const result = await this.ruleSet[field].__validate(field, value, this);
 
 		return {
 			field,
@@ -42,22 +43,21 @@ export class Schema {
 		};
 	}
 
-	public validate(values: Record<string, any>): ValidatedSchema {
-		return (<any>asSequence(Object.entries(values)))
-			.map(([field, value]: [string, any]) => {
-				return this.__validateField(field, value);
-			})
-			.reduce(
-				(acc: ValidatedSchema, { field, result }) => {
-					if (isError(result)) acc.errors.push(result as Error);
-					else acc.values[field] = result as any;
+	public async validate(values: Record<string, any>): Promise<ValidatedSchema> {
+		const ret: ValidatedSchema = {
+			errors: [],
+			values: {},
+		};
 
-					return acc;
-				},
-				{
-					errors: [],
-					values: {},
-				}
-			);
+		for(const [field, value] of Object.entries(values)){
+			try{
+				const newValue = await this.__validateField(field, value);
+				ret.values[field] = newValue;
+			}catch(error){
+				ret.errors.push(error);
+			}
+		}
+
+		return ret;
 	}
 }
