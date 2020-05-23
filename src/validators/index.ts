@@ -10,12 +10,12 @@ import { Min } from "./Min";
 import { MinLength } from "./MinLength";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
+import { OneOf } from "./OneOf";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
-import { OneOf } from "./OneOf";
 
 export interface BetweenArgs {
 	start: number;
