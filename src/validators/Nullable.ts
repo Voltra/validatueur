@@ -1,6 +1,7 @@
 import { AbstractValidator } from "./AbstractValidator";
 import { Validatueur } from "../api/index";
 import { isValue } from "../utils";
+import { RuleChain } from "../rules";
 
 //TODO: Move to sanitizers
 
@@ -12,10 +13,11 @@ export class Nullable<T = any> extends AbstractValidator<T | null> {
 	protected async __validate(
 		field: string,
 		value: T | null,
-		schema: Validatueur.Schema
+		schema: Validatueur.Schema,
+		rules: RuleChain<T>
 	): Validatueur.Promise<T | null> {
 		if (!isValue(value)) return null;
 
-		return value;
+		return rules.__validate(field, value as T, schema);
 	}
 }

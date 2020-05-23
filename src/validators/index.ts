@@ -1,5 +1,6 @@
 import { AbstractValidator, registerValidator } from "./AbstractValidator";
 import { AnyOfRules } from "./AnyOfRules";
+import { ArrayOf } from "./ArrayOf";
 import { HasDigit } from "./HasDigit";
 import { HasLowercaseLetter } from "./HasLowercaseLetter";
 import { HasSpecialCharacter } from "./HasSpecialCharacter";
@@ -35,28 +36,95 @@ export interface PasswordArgs extends BetweenArgs {
 /****************************************************************************\
  * Generic
 \****************************************************************************/
-// nullable()
+// nullable(ruleChain)
+/*
+Ex:
+	{
+		url: rules().nullable(
+			rules()
+			.url()
+		),
+	}
+*/
 registerValidator(new Nullable<any>());
 
 // required()
+/*
+Ex:
+	{
+		password: rules().required().password(),
+	}
+*/
 registerValidator(new Required());
 
 // sameAs(fieldName)
+/*
+Ex:
+	{
+		password: rules().required().password(),
+		password_confirmation: rules().sameAs("password"),
+	}
+*/
 registerValidator(new SameAs());
 
 // anyOfRules(ruleChain[])
+/*
+Ex:
+	{
+		identifier: rules().anyOf([
+			rules().username(),
+			rules().email(),
+			rules().integer().idFor({table: "users", field: "connect_id"}),
+		]),
+	}
+*/
 registerValidator(new AnyOfRules());
 
 // oneOf(values[])
+/*
+Ex:
+	{
+		amount: rules().oneOf([1, 2, 4, 10, 100])
+	}
+*/
 registerValidator(new OneOf());
+
+// arrayOf(ruleChain)
+/*
+Ex:
+	{
+		options: rules().arrayOf(
+			rules()
+			.oneOf([
+				"hosting",
+				"database",
+				"hosting",
+				"cloudflare"
+			])
+		)
+	}
+*/
+registerValidator(new ArrayOf());
 
 /****************************************************************************\
  * Numbers
 \****************************************************************************/
 // max(n, exclusive=true)
+/*
+Ex:
+	{
+		amount: rules().max(maxPerBuy, false)
+	}
+*/
 registerValidator(new Max<number>());
 
 // min(n, exclusive=false)
+/*
+Ex:
+	{
+		amount: rules().min(minPerBuy)
+	}
+*/
 registerValidator(new Min<number>());
 
 /*
@@ -66,6 +134,16 @@ registerValidator(new Min<number>());
 		endExclusive=true,
 		startExclusive=false,
 	})
+*/
+/*
+Ex:
+	{
+		amount: rules().between({
+			start: minPerBuy,
+			end: maxPerBuy,
+			endExclusive: false,
+		})
+	}
 */
 registerExtensionRule(
 	"between",
