@@ -1,10 +1,6 @@
 import { AbstractValidator, registerValidator } from "./AbstractValidator";
 import { AnyOfRules } from "./AnyOfRules";
 import { ArrayOf } from "./ArrayOf";
-import { Max } from "./Max";
-import { MaxLength } from "./MaxLength";
-import { Min } from "./Min";
-import { MinLength } from "./MinLength";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
 import { ObjectOfShape } from "./ObjectOfShape";
@@ -13,7 +9,7 @@ import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
-import { contains, RegularExpressions } from "../utils";
+import { contains, RegularExpressions, asNumber, asStr } from "../utils";
 
 export interface BetweenArgs {
 	start: number;
@@ -172,6 +168,22 @@ registerExtensionRule("isNot", <T = any>(expected: any) => {
 	return rules<T>().satisfies((value: T) => value !== expected);
 });
 
+registerExtensionRule("lessThan", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value < max);
+});
+
+registerExtensionRule("lessThanOrEqualTo", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value <= max);
+});
+
+registerExtensionRule("greaterThan", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value > min);
+});
+
+registerExtensionRule("greaterThanOrEqualTo", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value >= min);
+});
+
 /****************************************************************************\
  * Numbers
 \****************************************************************************/
@@ -182,7 +194,15 @@ Ex:
 		amount: rules().max(maxPerBuy, false)
 	}
 */
-registerValidator(new Max<number>());
+registerExtensionRule(
+	"max",
+	<T = number>(max: number, exclusive: boolean = true) => {
+		return rules<T>().satisfies((value: T) => {
+			const nb = asNumber(value);
+			return exclusive ? nb < max : nb <= max;
+		});
+	}
+);
 
 // min(n, exclusive=false)
 /*
@@ -191,7 +211,15 @@ Ex:
 		amount: rules().min(minPerBuy)
 	}
 */
-registerValidator(new Min<number>());
+registerExtensionRule(
+	"min",
+	<T = number>(min: number, exclusive: boolean = false) => {
+		return rules<T>().satisfies((value: T) => {
+			const nb = asNumber(value);
+			return exclusive ? nb > min : nb >= min;
+		});
+	}
+);
 
 /*
 	between({
@@ -213,33 +241,15 @@ Ex:
 */
 registerExtensionRule(
 	"between",
-	({
+	<T = number>({
 		start,
 		end,
 		endExclusive = true,
 		startExclusive = false,
 	}: BetweenArgs) => {
-		return rules<number>()
-			.min(start, startExclusive)
-			.max(end, endExclusive);
+		return rules<T>().min(start, startExclusive).max(end, endExclusive);
 	}
 );
-
-registerExtensionRule("lessThan", <T = any>(max: any) => {
-	return rules<T>().satisfies((value: T) => value < max);
-});
-
-registerExtensionRule("lessThanOrEqualTo", <T = any>(max: any) => {
-	return rules<T>().satisfies((value: T) => value <= max);
-});
-
-registerExtensionRule("greaterThan", <T = any>(min: any) => {
-	return rules<T>().satisfies((value: T) => value > min);
-});
-
-registerExtensionRule("greaterThanOrEqualTo", <T = any>(min: any) => {
-	return rules<T>().satisfies((value: T) => value >= min);
-});
 
 // notNaN()
 registerValidator(new NotNaN<number>());
@@ -248,10 +258,26 @@ registerValidator(new NotNaN<number>());
  * Strings
 \****************************************************************************/
 // maxLength(n, exclusive=true)
-registerValidator(new MaxLength<string>());
+registerExtensionRule(
+	"maxLength",
+	<T = string>(max: number, exclusive: boolean = true) => {
+		return rules<T>().satisfies((value: T) => {
+			const str = asStr(value);
+			return exclusive ? str.length < max : str.length <= max;
+		});
+	}
+);
 
 // minLength(n, exclusive=false)
-registerValidator(new MinLength<string>());
+registerExtensionRule(
+	"maxLength",
+	<T = string>(min: number, exclusive: boolean = false) => {
+		return rules<T>().satisfies((value: T) => {
+			const str = asStr(value);
+			return exclusive ? str.length >= min : str.length >= min;
+		});
+	}
+);
 
 /*
 	lengthBetween({
@@ -261,15 +287,21 @@ registerValidator(new MinLength<string>());
 		startExclusive=false,
 	})
 */
+/*
+Ex:
+	{
+		username: rules().lengthBetween({start: 6, end: 25}),
+	}
+*/
 registerExtensionRule(
 	"lengthBetween",
-	({
+	<T = string>({
 		start,
 		end,
 		endExclusive = true,
 		startExclusive = false,
 	}: BetweenArgs) => {
-		return rules<string>()
+		return rules<T>()
 			.minLength(start, startExclusive)
 			.maxLength(end, endExclusive);
 	}
@@ -280,23 +312,35 @@ registerExtensionRule(
 	"regex",
 	<T = any>(pattern: RegExp, fullMatch: boolean = true) => {
 		return rules<T>().satisfies((value: T) => {
-			const str = `${value}`;
-			const validates = fullMatch
+			const str = asStr(value);
+			return fullMatch
 				? pattern.test(str)
 				: !!str.match(pattern);
-			return Validatueur.noneIf(!validates, str);
 		});
 	}
 );
 
-export const registerRegexRule = (name: string, patternFactory: () => RegExp, fullMatch: boolean = false) => {
+/**
+ * Register a regex dependent validation rule
+ * @param name - The name of the validator method
+ * @param patternFactory - The factory to the pattern to match
+ * @param fullMatch - Whether or not the pattern should match the entire string
+ */
+export const registerRegexRule = (
+	name: string,
+	patternFactory: () => RegExp,
+	fullMatch: boolean = false
+) => {
 	registerExtensionRule(name, <T>() => {
 		return rules<T>().regex(patternFactory(), fullMatch);
-	})
+	});
 };
 
 // hasUppercaseLetter()
-registerRegexRule("hasUppercaseLetter", () => RegularExpressions.uppercaseLetter);
+registerRegexRule(
+	"hasUppercaseLetter",
+	() => RegularExpressions.uppercaseLetter
+);
 
 // hasLowercaseLetter()
 registerRegexRule("hasDigit", () => RegularExpressions.lowercaseLetter);
@@ -305,7 +349,10 @@ registerRegexRule("hasDigit", () => RegularExpressions.lowercaseLetter);
 registerRegexRule("hasDigit", () => RegularExpressions.digit);
 
 // hasSpecialCharacter()
-registerRegexRule("hasSpecialCharacter", () => RegularExpressions.specialCharacter);
+registerRegexRule(
+	"hasSpecialCharacter",
+	() => RegularExpressions.specialCharacter
+);
 
 /*
 	password({
