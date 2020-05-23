@@ -140,10 +140,12 @@ Ex:
 		mod2: rules().doesNotSatisfy(x => x%2),
 	}
 */
-registerExtensionRule("doesNotSatisfy", <T = any>(predicate: (value: T) => boolean) => {
-	return rules<T>().satisfies((value: T) => !predicate(value));
-});
-
+registerExtensionRule(
+	"doesNotSatisfy",
+	<T = any>(predicate: (value: T) => boolean) => {
+		return rules<T>().satisfies((value: T) => !predicate(value));
+	}
+);
 
 // oneOf(values[])
 /*
@@ -165,6 +167,14 @@ Ex:
 */
 registerExtensionRule("notIn", <T = any>(values: any[]) => {
 	return rules<T>().satisfies((value: T) => !contains(values, value));
+});
+
+registerExtensionRule("is", <T = any>(expected: any) => {
+	return rules<T>().satisfies((value: T) => value === expected);
+});
+
+registerExtensionRule("isNot", <T = any>(expected: any) => {
+	return rules<T>().satisfies((value: T) => value !== expected);
 });
 
 /****************************************************************************\
