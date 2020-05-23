@@ -177,6 +177,22 @@ registerExtensionRule("isNot", <T = any>(expected: any) => {
 	return rules<T>().satisfies((value: T) => value !== expected);
 });
 
+registerExtensionRule("lessThan", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value < max);
+});
+
+registerExtensionRule("lessThanOrEqualTo", <T = any>(max: any) => {
+	return rules<T>().satisfies((value: T) => value <= max);
+});
+
+registerExtensionRule("greaterThan", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value > min);
+});
+
+registerExtensionRule("greaterThanOrEqualTo", <T = any>(min: any) => {
+	return rules<T>().satisfies((value: T) => value >= min);
+});
+
 /****************************************************************************\
  * Numbers
 \****************************************************************************/
