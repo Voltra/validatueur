@@ -11,6 +11,7 @@ import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
+import { SameAs } from "./SameAs";
 import { registerExtensionRule, rules } from "../rules";
 
 /****************************************************************************\
@@ -21,6 +22,11 @@ registerValidator(new Nullable<any>());
 
 // required()
 registerValidator(new Required());
+
+// sameAs(fieldName)
+registerValidator(new SameAs());
+
+
 
 /****************************************************************************\
  * Numbers

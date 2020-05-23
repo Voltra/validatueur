@@ -22,23 +22,24 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 };
 
 export class RuleChain<T = any, U = T> {
-	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {
-	}
+	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {}
 
-	public __getFirst<A = T, B = U>(){ // backtrack to first rule
+	public __getFirst<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
+		// backtrack to first rule
 		let first = this.root as any as Validatueur.ValidatorWrapper<A, B>;
 
-		while(!isNone(first.parent))
+		while (!isNone(first.parent))
 			first = first.parent as any as Validatueur.ValidatorWrapper<A, B>;
 
 		return first;
 	}
 
-	public __getLast<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B>{ // backtrack to last rule
-		let last = this.root as any as Validatueur.ValidatorWrapper<A, B>;
+	public __getLast<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
+		// backtrack to last rule
+		let last = (this.root as any) as Validatueur.ValidatorWrapper<A, B>;
 
-		while(!isNone(last.child))
-			last = last.child as any as Validatueur.ValidatorWrapper<A, B>;
+		while (!isNone(last.child))
+			last = (last.child as any) as Validatueur.ValidatorWrapper<A, B>;
 
 		return last;
 	}
@@ -54,7 +55,8 @@ export class RuleChain<T = any, U = T> {
 			any
 		>> = this.__getFirst();
 
-		while (!isNone(root)) { // iterate through rules
+		while (!isNone(root)) {
+			// iterate through rules
 			const wrapper = root as Validatueur.ValidatorWrapper<any, any>;
 
 			const { args, rule } = wrapper;
@@ -65,7 +67,7 @@ export class RuleChain<T = any, U = T> {
 					: "";
 
 			const result = wrapper.validator().validate(
-				value,
+				currentValue,
 				{
 					args,
 					field,
@@ -97,7 +99,9 @@ export const registerExtensionRule = <T, U>(
 	if (ruleExists(name))
 		throw new ReferenceError(`Tried to redefine rule "${name}"`);
 
-	RuleChain.prototype[name] = function(...args: any[]): Validatueur.Extended<RuleChain<T, U>>{
+	RuleChain.prototype[name] = function (
+		...args: any[]
+	): Validatueur.Extended<RuleChain<T, U>> {
 		const child = fn(...args);
 		this.root.__getLast().child = child.__getFirst();
 		child.__getFirst().parent = this.root.__getLast();
