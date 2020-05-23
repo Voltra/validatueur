@@ -9,6 +9,7 @@ import { Max } from "./Max";
 import { MaxLength } from "./MaxLength";
 import { Min } from "./Min";
 import { MinLength } from "./MinLength";
+import { NotIn } from "./NotIn";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
 import { ObjectOfShape } from "./ObjectOfShape";
@@ -85,10 +86,19 @@ registerValidator(new AnyOfRules());
 /*
 Ex:
 	{
-		amount: rules().oneOf([1, 2, 4, 10, 100])
+		amount: rules().oneOf([1, 2, 4, 10, 100]),
 	}
 */
 registerValidator(new OneOf());
+
+// notIn(values[])
+/*
+Ex:
+	{
+		name: rules().identifier().notIn(reservedKeywords),
+	}
+*/
+registerValidator(new NotIn());
 
 // arrayOf(ruleChain)
 /*
@@ -102,7 +112,7 @@ Ex:
 				"hosting",
 				"cloudflare"
 			])
-		)
+		),
 	}
 */
 registerValidator(new ArrayOf());

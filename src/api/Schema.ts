@@ -23,6 +23,8 @@ export class Schema {
 		return new this(rules, messages);
 	}
 
+	public includeExtra = false;
+
 	protected constructor(
 		public readonly ruleSet: Record<string, RuleChain>,
 		public readonly messages: Messages
@@ -30,7 +32,7 @@ export class Schema {
 
 	public async __validateField(
 		field: string,
-		value: any
+		value: any,
 	): Promise<SchemaFieldValidationResult> {
 		if (!(field in this.ruleSet))
 			return {
@@ -47,7 +49,8 @@ export class Schema {
 	}
 
 	public async validate(
-		values: Record<string, any>
+		values: Record<string, any>,
+		includeExtra: boolean = false,
 	): Validatueur.Promise<ValidatedSchema> {
 		const ret: ValidatedSchema = {
 			errors: [],
@@ -55,7 +58,12 @@ export class Schema {
 			valid: false,
 		};
 
+		this.includeExtra = includeExtra;
+
 		for (const [field, value] of Object.entries(values)) {
+			if(!(field in this.ruleSet) && !this.includeExtra)
+				continue;
+
 			try {
 				const newValue = await this.__validateField(field, value);
 				ret.values[field] = newValue;
