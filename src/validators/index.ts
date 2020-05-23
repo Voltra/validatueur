@@ -15,6 +15,7 @@ import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
+import { OneOf } from "./OneOf";
 
 export interface BetweenArgs {
 	start: number;
@@ -43,8 +44,11 @@ registerValidator(new Required());
 // sameAs(fieldName)
 registerValidator(new SameAs());
 
-// anyOfRules(...ruleChains)
+// anyOfRules(ruleChain[])
 registerValidator(new AnyOfRules());
+
+// oneOf(values[])
+registerValidator(new OneOf());
 
 /****************************************************************************\
  * Numbers
