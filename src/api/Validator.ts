@@ -4,7 +4,11 @@ import { ValidatorArgs } from "./ValidatorArgs";
 import { Schema } from "./Schema";
 
 export interface Validator<T = any, U = T> {
-	validate(value: T, args: ValidatorArgs, schema: Schema): ValidationPromise<U, Error>;
+	validate(
+		value: T,
+		args: ValidatorArgs,
+		schema: Schema
+	): ValidationPromise<U, Error>;
 }
 
 export interface ValidatorWrapper<T = any, U = T> {

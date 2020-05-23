@@ -68,7 +68,7 @@ export class RuleChain<T = any, U = T> {
 					? schema.messages[messageField]
 					: "";
 
-			try{
+			try {
 				const result = await wrapper.validator().validate(
 					field,
 					currentValue,
@@ -82,7 +82,7 @@ export class RuleChain<T = any, U = T> {
 
 				currentValue = result as any;
 				root = wrapper.child;
-			}catch(e){
+			} catch (e) {
 				return e; // exit early on failure
 			}
 		}
