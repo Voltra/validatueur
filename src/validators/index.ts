@@ -9,17 +9,16 @@ import { Max } from "./Max";
 import { MaxLength } from "./MaxLength";
 import { Min } from "./Min";
 import { MinLength } from "./MinLength";
-import { NotIn } from "./NotIn";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
 import { ObjectOfShape } from "./ObjectOfShape";
-import { OneOf } from "./OneOf";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
+import { contains } from "../utils";
 
 export interface BetweenArgs {
 	start: number;
@@ -83,24 +82,6 @@ Ex:
 */
 registerValidator(new AnyOfRules());
 
-// oneOf(values[])
-/*
-Ex:
-	{
-		amount: rules().oneOf([1, 2, 4, 10, 100]),
-	}
-*/
-registerValidator(new OneOf());
-
-// notIn(values[])
-/*
-Ex:
-	{
-		name: rules().identifier().notIn(reservedKeywords),
-	}
-*/
-registerValidator(new NotIn());
-
 // arrayOf(ruleChain)
 /*
 Ex:
@@ -152,9 +133,38 @@ Ex:
 */
 registerValidator(new Satisfies());
 
-registerExtensionRule("doesNotSatisfy", <T>(predicate) => {
-	return rules<T>()
-			.satisfies(value => !predicate(value));
+// doesNotSatisfy(predicate)
+/*
+Ex:
+	{
+		mod2: rules().doesNotSatisfy(x => x%2),
+	}
+*/
+registerExtensionRule("doesNotSatisfy", <T = any>(predicate: (value: T) => boolean) => {
+	return rules<T>().satisfies((value: T) => !predicate(value));
+});
+
+
+// oneOf(values[])
+/*
+Ex:
+	{
+		amount: rules().oneOf([1, 2, 4, 10, 100]),
+	}
+*/
+registerExtensionRule("oneOf", <T = any>(values: any[]) => {
+	return rules<T>().satisfies((value: T) => contains(values, value));
+});
+
+// notIn(values[])
+/*
+Ex:
+	{
+		name: rules().identifier().notIn(reservedKeywords),
+	}
+*/
+registerExtensionRule("notIn", <T = any>(values: any[]) => {
+	return rules<T>().satisfies((value: T) => !contains(values, value));
 });
 
 /****************************************************************************\
