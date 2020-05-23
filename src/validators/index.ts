@@ -9,7 +9,7 @@ import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
-import { contains, RegularExpressions, asNumber, asStr } from "../utils";
+import { contains, RegularExpressions, asNumber, asStr, asDate } from "../utils";
 
 export interface BetweenArgs {
 	start: number;
@@ -406,6 +406,53 @@ registerExtensionRule("doesNotContain", <T = string>(substr: string) => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);
 		return !str.includes(substr);
+	});
+});
+
+
+
+/****************************************************************************\
+ * Dates
+\****************************************************************************/
+registerExtensionRule("after", <T = Date>(min: any, format?: string) => {
+	const minDate = asDate(min, format);
+	return rules<T>().satisfies((value: T) => {
+		return asDate(value, format).isAfter(minDate);
+	});
+});
+
+registerExtensionRule("before", <T = Date>(min: any, format?: string) => {
+	const minDate = asDate(min, format);
+	return rules<T>().satisfies((value: T) => {
+		return asDate(value, format).isBefore(minDate);
+	});
+});
+
+registerExtensionRule("sameOrAfter", <T = Date>(min: any, format?: string) => {
+	const minDate = asDate(min, format);
+	return rules<T>().satisfies((value: T) => {
+		return asDate(value, format).isSameOrAfter(minDate);
+	});
+});
+
+registerExtensionRule("sameOrBefore", <T = Date>(min: any, format?: string) => {
+	const minDate = asDate(min, format);
+	return rules<T>().satisfies((value: T) => {
+		return asDate(value, format).isSameOrBefore(minDate);
+	});
+});
+
+registerExtensionRule("dateBetween", <T = Date>(min: any, max: any, {
+	startExcluded = false,
+	endExcluded = true,
+	unit = undefined,
+} = {}, format?: string) => {
+	const minDate = asDate(min, format);
+	const maxDate = asDate(max, format);
+	const boundFmt = (startExcluded ? "(" : "[") + (endExcluded ? ")" : "]");
+
+	return rules<T>().satisfies((value: T) => {
+		return asDate(value, format).isBetween(minDate, maxDate, unit, boundFmt);
 	});
 });
 

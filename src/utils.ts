@@ -1,5 +1,6 @@
 import { isNone } from "./api/types";
 import { Validatueur } from "./api/index";
+import moment from "moment";
 
 export const isEmpty = (str: string) => /^\s*$/.test(str);
 
@@ -28,6 +29,13 @@ export const asNumber = <T>(value: T) => {
 	// JS engine implementations may treat floats and integer differently
 	// (e.g. greater precision for integers)
 	return integer === float ? integer : float;
+};
+
+export const asDate = <T = any>(value: T, format?: string): moment.Moment => {
+	// use strict mode of moments
+	return typeof format == "string"
+		? moment(value, format, true)
+		: moment(value, true);
 };
 
 export const RegularExpressions = {

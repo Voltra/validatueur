@@ -39,6 +39,7 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
+		"moment": "^2.26.0",
 		"sequency": "^0.19.2",
 		"string-template": "^1.0.0"
 	}
