@@ -64,23 +64,23 @@ export const Sanitizers = {
 		const nb = parseFloat(value);
 		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
-	moment<T>(value: T, format?: string){
+	moment<T>(value: T, format?: string) {
 		const date = asDate(value, format);
 		return Validatueur.noneIf(date.isValid(), date);
 	},
-	async date<T>(value: T, format?: string){
+	async date<T>(value: T, format?: string) {
 		const date = await Sanitizers.moment(value, format);
 		return date.toDate();
 	},
-	async ago<T>(value: T, format?: string){
+	async ago<T>(value: T, format?: string) {
 		const date = await Sanitizers.moment(value, format);
 		return date.fromNow();
 	},
-	async momentDisplay<T>(value: T, {
-		parseFormat = undefined,
-		displayFormat = undefined,
-	} = {}){
+	async momentDisplay<T>(
+		value: T,
+		{ parseFormat = undefined, displayFormat = undefined } = {}
+	) {
 		const date = await Sanitizers.moment(value, parseFormat);
 		return date.format(displayFormat);
-	}
+	},
 };

@@ -6,6 +6,4 @@ export * from "./validators/index";
 export { Schema } from "./api/Schema";
 import moment from "moment";
 
-export {
-	moment,
-}
+export { moment };
