@@ -4,6 +4,8 @@ import { Validatueur } from "./api/index";
 export const isEmpty = (str: string) => /^\s*$/.test(str);
 
 export const asStr = <T>(value: T) => {
+	if (typeof value == "string") return value;
+
 	return `${value}`;
 };
 
@@ -14,7 +16,7 @@ export const isValue = <T>(value: T) => {
 export const trim = <T>(value: T) => asStr(value).trim();
 
 export const contains = <T>(values: any[], value: T) =>
-	values.some(v => v === value);
+	values.some((v) => v === value);
 
 export const asNumber = <T>(value: T) => {
 	if (typeof value == "number") return value;

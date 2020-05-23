@@ -313,9 +313,7 @@ registerExtensionRule(
 	<T = any>(pattern: RegExp, fullMatch: boolean = true) => {
 		return rules<T>().satisfies((value: T) => {
 			const str = asStr(value);
-			return fullMatch
-				? pattern.test(str)
-				: !!str.match(pattern);
+			return fullMatch ? pattern.test(str) : !!str.match(pattern);
 		});
 	}
 );
@@ -365,14 +363,14 @@ registerRegexRule(
 */
 registerExtensionRule(
 	"password",
-	({
+	<T = string>({
 		min = 8,
 		max = 100,
 		endExclusive = true,
 		startExclusive = false,
 		useMax = true,
 	}: Partial<PasswordArgs> = {}) => {
-		const chain = rules<string>()
+		const chain = rules<T>()
 			.hasUppercaseLetter()
 			.hasLowercaseLetter()
 			.hasNumber()
@@ -382,5 +380,33 @@ registerExtensionRule(
 		return useMax ? chain.maxLength(max, endExclusive) : chain;
 	}
 );
+
+registerExtensionRule("startsWith", <T = string>(start: string) => {
+	return rules<T>().satisfies((value: T) => {
+		const str = asStr(value);
+		return str.startsWith(start);
+	});
+});
+
+registerExtensionRule("endsWith", <T = string>(end: string) => {
+	return rules<T>().satisfies((value: T) => {
+		const str = asStr(value);
+		return str.endsWith(end);
+	});
+});
+
+registerExtensionRule("contains", <T = string>(substr: string) => {
+	return rules<T>().satisfies((value: T) => {
+		const str = asStr(value);
+		return str.includes(substr);
+	});
+});
+
+registerExtensionRule("doesNotContain", <T = string>(substr: string) => {
+	return rules<T>().satisfies((value: T) => {
+		const str = asStr(value);
+		return !str.includes(substr);
+	});
+});
 
 export { AbstractValidator, registerValidator };
