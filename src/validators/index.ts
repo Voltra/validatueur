@@ -11,6 +11,7 @@ import { Min } from "./Min";
 import { MinLength } from "./MinLength";
 import { NotNaN } from "./NotNaN";
 import { Nullable } from "./Nullable";
+import { ObjectOfShape } from "./ObjectOfShape";
 import { OneOf } from "./OneOf";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
@@ -105,6 +106,31 @@ Ex:
 	}
 */
 registerValidator(new ArrayOf());
+
+// objectOfShape(schema)
+/*
+Ex:
+	{
+		friendsInvited: rules().arrayOf(
+			rules().objectOfShape(Schema.from({
+				rules: {
+					identifier: rules().integer().oneOfRules([
+						rules().idFor({table: "users", field: "connect_id"}),
+						rules().idFor({table: "anonymous", field: "code"}),
+					]),
+					inviteLink: rules().url().matchRoute("invitation.join"),
+				},
+				messages: {
+					"identifier.integer": "The identifier must be an integer",
+					"identifier.oneOfRules": "The identifier must exist",
+					"inviteLink.url": "The invitation URL is invalid",
+					"inviteLink.matchRoute": "The invitation URL must be of the correct format"
+				},
+			}))
+		)
+	}
+*/
+registerValidator(new ObjectOfShape());
 
 /****************************************************************************\
  * Numbers
