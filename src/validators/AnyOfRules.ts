@@ -19,9 +19,11 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 			try {
 				const ret = await chain.__validate(field, value, schema);
 				return ret;
-			} catch (e) {
+			} catch (_) {
 				continue;
 			}
 		}
+
+		throw Validatueur.none;
 	}
 }

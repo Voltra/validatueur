@@ -11,12 +11,11 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 		validator(): Validatueur.Validator<T> {
 			return {
 				validate(
-					_field: string,
 					value: T,
 					_vargs: Validatueur.ValidatorArgs,
 					_schema: Validatueur.Schema
-				): Validatueur.Result<T, Validatueur.Error> {
-					return value;
+				): Validatueur.Promise<T, Validatueur.Error> {
+					return Promise.resolve(value);
 				},
 			};
 		},
@@ -68,23 +67,18 @@ export class RuleChain<T = any, U = T> {
 					? schema.messages[messageField]
 					: "";
 
-			try {
-				const result = await wrapper.validator().validate(
+			const result = await wrapper.validator().validate(
+				currentValue,
+				{
+					args,
 					field,
-					currentValue,
-					{
-						args,
-						field,
-						message,
-					},
-					schema
-				);
+					message,
+				},
+				schema,
+			);
 
-				currentValue = result as any;
-				root = wrapper.child;
-			} catch (e) {
-				return e; // exit early on failure
-			}
+			currentValue = result as any;
+			root = wrapper.child;
 		}
 
 		return currentValue;

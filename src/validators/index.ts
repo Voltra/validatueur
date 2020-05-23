@@ -17,6 +17,7 @@ import {
 	asDate,
 	moment,
 	now,
+	Moment,
 } from "../utils";
 
 export interface BetweenArgs {
@@ -458,8 +459,16 @@ registerExtensionRule(
 	) => {
 		const minDate = asDate(min, format);
 		const maxDate = asDate(max, format);
-		const boundFmt =
-			(startExcluded ? "(" : "[") + (endExcluded ? ")" : "]");
+		const boundFmt: "()" | "[)" | "(]" | "[]" = (() => {
+			if(startExcluded && endExcluded)
+				return "()";
+			else if(startExcluded)
+				return "(]";
+			else if(endExcluded)
+				return "[)";
+			else
+				return "[]";
+		})();
 
 		return rules<T>().satisfies((value: T) => {
 			return asDate(value, format).isBetween(
@@ -481,8 +490,8 @@ registerExtensionRule("onLeapYear", <T = Date>(format?: string) => {
 registerExtensionRule(
 	"beforeOffsetOf",
 	<T = Date>(
-		amount?: moment.DurationInputArg1,
-		unit?: moment.DurationInputArg2,
+		amount?: Moment.DurationInputArg1,
+		unit?: Moment.DurationInputArg2,
 		format?: string
 	) => {
 		const now_ = now();
@@ -494,8 +503,8 @@ registerExtensionRule(
 registerExtensionRule(
 	"afterOffsetOf",
 	<T = Date>(
-		amount?: moment.DurationInputArg1,
-		unit?: moment.DurationInputArg2,
+		amount?: Moment.DurationInputArg1,
+		unit?: Moment.DurationInputArg2,
 		format?: string
 	) => {
 		const min = now().add(amount, unit);
