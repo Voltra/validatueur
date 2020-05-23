@@ -17,6 +17,7 @@ import { OneOf } from "./OneOf";
 import { Regex } from "./Regex";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
+import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
 import { Validatueur } from "../api/index";
 
@@ -141,6 +142,20 @@ Ex:
 	}
 */
 registerValidator(new ObjectOfShape());
+
+// satisfies(predicate)
+/*
+Ex:
+	{
+		mod2: rules().satisfies(x => x%2 == 0),
+	}
+*/
+registerValidator(new Satisfies());
+
+registerExtensionRule("doesNotSatisfy", <T>(predicate) => {
+	return rules<T>()
+			.satisfies(value => !predicate(value));
+});
 
 /****************************************************************************\
  * Numbers

@@ -32,7 +32,7 @@ export class Schema {
 
 	public async __validateField(
 		field: string,
-		value: any,
+		value: any
 	): Promise<SchemaFieldValidationResult> {
 		if (!(field in this.ruleSet))
 			return {
@@ -50,7 +50,7 @@ export class Schema {
 
 	public async validate(
 		values: Record<string, any>,
-		includeExtra: boolean = false,
+		includeExtra: boolean = false
 	): Validatueur.Promise<ValidatedSchema> {
 		const ret: ValidatedSchema = {
 			errors: [],
@@ -61,8 +61,7 @@ export class Schema {
 		this.includeExtra = includeExtra;
 
 		for (const [field, value] of Object.entries(values)) {
-			if(!(field in this.ruleSet) && !this.includeExtra)
-				continue;
+			if (!(field in this.ruleSet) && !this.includeExtra) continue;
 
 			try {
 				const newValue = await this.__validateField(field, value);
