@@ -30,8 +30,7 @@ export const noneIf = async <T>(
 	condition: boolean,
 	value: T
 ): Promise<T, None> => {
-	if(condition)
-		return value;
+	if (condition) return value;
 
 	throw none;
 };

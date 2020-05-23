@@ -10,10 +10,16 @@ export abstract class AbstractValidator<T = any, U = T>
 		args: Validatueur.ValidatorArgs,
 		schema: Validatueur.Schema
 	): Validatueur.Promise<U, Validatueur.Error> {
-		try{
-			const ret = await this.__validate(args.field, value, schema, args.args);
+		try {
+			const ret = await this.__validate(
+				args.field,
+				value,
+				schema,
+				args.args
+			);
 			return ret;
-		}catch(_){ //TODO: Maybe refactor __validate interface to return result (instead of optional), would allow "error impersonation"
+		} catch (_) {
+			//TODO: Maybe refactor __validate interface to return result (instead of optional), would allow "error impersonation"
 			throw errorFrom(args, this);
 		}
 	}

@@ -3,7 +3,7 @@ import { ValidatedSchema } from "./ValidatedSchema";
 import { RuleChain } from "../rules";
 import { asSequence } from "sequency";
 import { Validatueur } from "./index";
-import { Messages } from "./Messages"
+import { Messages } from "./Messages";
 
 export interface SchemaArgs {
 	rules: Record<string, RuleChain>;
@@ -43,17 +43,19 @@ export class Schema {
 		};
 	}
 
-	public async validate(values: Record<string, any>): Promise<ValidatedSchema> {
+	public async validate(
+		values: Record<string, any>
+	): Promise<ValidatedSchema> {
 		const ret: ValidatedSchema = {
 			errors: [],
 			values: {},
 		};
 
-		for(const [field, value] of Object.entries(values)){
-			try{
+		for (const [field, value] of Object.entries(values)) {
+			try {
 				const newValue = await this.__validateField(field, value);
 				ret.values[field] = newValue;
-			}catch(error){
+			} catch (error) {
 				ret.errors.push(error);
 			}
 		}
