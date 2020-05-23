@@ -8,12 +8,11 @@ import { extendRules } from "../rules";
 export abstract class AbstractValidator<T = any, U = T>
 	implements Validatueur.Validator<T, U> {
 	public validate(
-		field: string,
 		value: T,
 		args: Validatueur.ValidatorArgs,
 		schema: Validatueur.Schema
 	): Validatueur.Result<U, Validatueur.Error> {
-		const opt = this.__validate(field, value, schema, args.args);
+		const opt = this.__validate(args.field, value, schema, args.args);
 		if (isNone(opt)) return errorFrom(args, this);
 
 		return opt as U;

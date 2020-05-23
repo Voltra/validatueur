@@ -14,7 +14,7 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 					_field: string,
 					value: T,
 					_vargs: Validatueur.ValidatorArgs,
-					_schema: Validatueur.Schema,
+					_schema: Validatueur.Schema
 				): Validatueur.Result<T, Validatueur.Error> {
 					return value;
 				},
