@@ -6,9 +6,13 @@ export class HasSpecialCharacter<T = string> extends Regex<T> {
 		return "hasSpecialCharacter";
 	}
 
-	protected __validate(value: T): Validatueur.Optional<string> {
+	protected __validate(
+		value: T,
+		schema: Validatueur.Schema
+	): Validatueur.Optional<string> {
 		return super.__validate(
 			value,
+			schema,
 			/[\.!\?\[\]\(\)\{\}\<\>\^\$€#@,;:\-_%&~"'\|`=]/,
 			false
 		);

@@ -8,6 +8,7 @@ export class Max<T = number> extends AbstractValidator<T, number> {
 	}
 	protected __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		max: number,
 		exclusive: boolean = true
 	): Validatueur.Optional<number> {

@@ -9,6 +9,7 @@ export class MinLength<T = string> extends AbstractValidator<T, string> {
 
 	protected __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		min: number,
 		exclusive: boolean = false
 	): Validatueur.Optional<string> {

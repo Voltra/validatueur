@@ -7,7 +7,10 @@ export class Required<T = any> extends AbstractValidator<T> {
 		return "required";
 	}
 
-	protected __validate(value: T): Validatueur.Optional<T> {
+	protected __validate(
+		value: T,
+		schema: Validatueur.Schema
+	): Validatueur.Optional<T> {
 		if (isValue(value)) return value;
 	}
 }

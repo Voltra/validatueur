@@ -35,6 +35,6 @@ export namespace Validatueur {
 	export type Sanitizer<T, U = T> = _Sanitizer<T, U>;
 	export type ValidatorWrapper<T, U = T> = _ValidatorWrapper<T, U>;
 
-	export const Schema = _Schema;
+	export type Schema = _Schema;
 	export type ValidatedSchema = _ValidatedSchema;
 }

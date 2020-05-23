@@ -7,7 +7,10 @@ export class Nullable<T = any> extends AbstractValidator<T | null> {
 		return "nullable";
 	}
 
-	protected __validate(value: T | null): Validatueur.Optional<T | null> {
+	protected __validate(
+		value: T | null,
+		schema: Validatueur.Schema
+	): Validatueur.Optional<T | null> {
 		if (!isValue(value)) return null;
 
 		return value;

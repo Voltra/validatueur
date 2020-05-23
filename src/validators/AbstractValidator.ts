@@ -7,9 +7,10 @@ export abstract class AbstractValidator<T = any, U = T>
 	implements Validatueur.Validator<T, U> {
 	public validate(
 		value: T,
-		args: Validatueur.ValidatorArgs
+		args: Validatueur.ValidatorArgs,
+		schema: Validatueur.Schema
 	): Validatueur.Result<U, Validatueur.Error> {
-		const opt = this.__validate(value, args.args);
+		const opt = this.__validate(value, schema, args.args);
 		if (isNone(opt)) return errorFrom(args, this);
 
 		return opt as U;
@@ -18,6 +19,7 @@ export abstract class AbstractValidator<T = any, U = T>
 	public abstract get rule(): string;
 	protected abstract __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		...args: any[]
 	): Validatueur.Optional<U>;
 }

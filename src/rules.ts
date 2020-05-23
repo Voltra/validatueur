@@ -23,42 +23,56 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 
 export class RuleChain<T = any, U = T> {
 	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {
-		if (this.root.parent !== Validatueur.none)
-			throw new Error("Latest rule in the chain should not have a child");
 	}
 
-	validate(
+	public __getFirst<A = T, B = U>(){ // backtrack to first rule
+		let first = this.root as any as Validatueur.ValidatorWrapper<A, B>;
+
+		while(!isNone(first.parent))
+			first = first.parent as any as Validatueur.ValidatorWrapper<A, B>;
+
+		return first;
+	}
+
+	public __getLast<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B>{ // backtrack to last rule
+		let last = this.root as any as Validatueur.ValidatorWrapper<A, B>;
+
+		while(!isNone(last.child))
+			last = last.child as any as Validatueur.ValidatorWrapper<A, B>;
+
+		return last;
+	}
+
+	public __validate(
 		field: string,
 		value: T,
-		messages: Record<string, string>
+		schema: Validatueur.Schema
 	): Validatueur.Result<any, Validatueur.Error> {
-		const { none } = Validatueur;
 		let currentValue: any = value;
 		let root: Validatueur.Optional<Validatueur.ValidatorWrapper<
 			any,
 			any
-		>> = this.root;
+		>> = this.__getFirst();
 
-		while (
-			!isNone(root) &&
-			!isNone((root as any).parent) // backtrack to first rule
-		)
-			root = (root as any).parent;
-
-		while (!isNone(root)) {
-			// iterate through rules
+		while (!isNone(root)) { // iterate through rules
 			const wrapper = root as Validatueur.ValidatorWrapper<any, any>;
 
 			const { args, rule } = wrapper;
 			const messageField = `${field}.${rule}`;
 			const message =
-				messageField in messages ? messages[messageField] : "";
+				messageField in schema.messages
+					? schema.messages[messageField]
+					: "";
 
-			const result = wrapper.validator().validate(value, {
-				args,
-				field,
-				message,
-			});
+			const result = wrapper.validator().validate(
+				value,
+				{
+					args,
+					field,
+					message,
+				},
+				schema
+			);
 
 			if (isError(result)) return result; // exit early on failure
 
@@ -83,7 +97,12 @@ export const registerExtensionRule = <T, U>(
 	if (ruleExists(name))
 		throw new ReferenceError(`Tried to redefine rule "${name}"`);
 
-	RuleChain.prototype[name] = fn;
+	RuleChain.prototype[name] = function(...args: any[]): Validatueur.Extended<RuleChain<T, U>>{
+		const child = fn(...args);
+		this.root.__getLast().child = child.__getFirst();
+		child.__getFirst().parent = this.root.__getLast();
+		return child;
+	};
 };
 
 export const extendRules = <T = any, U = T>(
@@ -91,10 +110,8 @@ export const extendRules = <T = any, U = T>(
 	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
 ) => {
 	return registerExtensionRule(name, function (...args: any[]) {
-		const child = fn(...args);
-		child.parent = this.root;
-		this.root.child = child;
-		return new RuleChain<T, U>(child);
+		const wrapper = fn(...args);
+		return new RuleChain<T, U>(wrapper);
 	});
 };
 

@@ -8,6 +8,7 @@ export class MaxLength<T = string> extends AbstractValidator<T, string> {
 	}
 	protected __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		max: number,
 		exclusive: boolean = true
 	): Validatueur.Optional<string> {

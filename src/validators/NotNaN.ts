@@ -8,6 +8,7 @@ export class NotNaN<T = number> extends AbstractValidator<T, number> {
 	}
 	protected __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		...args: any[]
 	): Validatueur.Optional<number> {
 		const nb = asNumber(value);

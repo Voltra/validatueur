@@ -8,6 +8,7 @@ export class Min<T = number> extends AbstractValidator<T, number> {
 	}
 	protected __validate(
 		value: T,
+		schema: Validatueur.Schema,
 		min: number,
 		exclusive: boolean = false
 	): Validatueur.Optional<number> {

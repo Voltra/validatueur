@@ -6,7 +6,10 @@ export class HasDigit<T = string> extends Regex<T> {
 		return "hasDigit";
 	}
 
-	protected __validate(value: T): Validatueur.Optional<string> {
-		return super.__validate(value, /[0-9]/, false);
+	protected __validate(
+		value: T,
+		schema: Validatueur.Schema
+	): Validatueur.Optional<string> {
+		return super.__validate(value, schema, /[0-9]/, false);
 	}
 }

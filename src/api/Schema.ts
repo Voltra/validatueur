@@ -14,8 +14,8 @@ export class Schema {
 	}
 
 	protected constructor(
-		protected ruleSet: Record<string, RuleChain>,
-		protected messages: Record<string, string>
+		public readonly ruleSet: Record<string, RuleChain>,
+		public readonly messages: Record<string, string>
 	) {}
 
 	public validate(values: Record<string, any>): ValidatedSchema {
@@ -28,7 +28,7 @@ export class Schema {
 					};
 
 				const chain = this.ruleSet[field];
-				const result = chain.validate(field, value, this.messages);
+				const result = chain.__validate(field, value, this.messages);
 
 				return {
 					field,
