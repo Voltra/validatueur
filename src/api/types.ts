@@ -25,6 +25,7 @@ export const isNone = <T>(opt: Optional<T>) => {
 };
 
 export type ValidationPromise<T = any, E = any> = Promise<T>;
+export const ValidationPromise = Promise; // ts 1055, this is completely retarded, typescript fix this
 
 export const noneIf = async <T>(
 	condition: boolean,

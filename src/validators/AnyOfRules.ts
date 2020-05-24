@@ -4,6 +4,7 @@ import { RuleChain } from "../rules";
 import { Validatueur } from "../api/index";
 import { asSequence } from "sequency";
 import { isError } from "../api/Error";
+import { ValidationPromise } from "../api/types";
 
 export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 	public get rule(): string {

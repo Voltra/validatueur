@@ -27,6 +27,7 @@ export namespace Validatueur {
 	export type Result<T, E> = _Result<T, E>;
 	export type Extended<T> = _Extended<T>;
 	export type Promise<T = any, E = any> = _Promise<T, E>;
+	export const Promise = _Promise; // ts 1055, this is completely retarded, typescript fix this
 	export const none = _none;
 	export const noneIf = _noneIf;
 
