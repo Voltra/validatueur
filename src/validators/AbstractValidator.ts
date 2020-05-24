@@ -1,5 +1,4 @@
 import { Validatueur } from "../api/index";
-import { isNone } from "../api/types";
 import { errorFrom } from "../api/helpers";
 import { extendRules } from "../rules";
 

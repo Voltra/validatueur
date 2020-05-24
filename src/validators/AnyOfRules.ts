@@ -1,10 +1,7 @@
-import { AbstractValidator } from "./AbstractValidator";
-import { Schema } from "../index";
-import { RuleChain } from "../rules";
 import { Validatueur } from "../api/index";
-import { asSequence } from "sequency";
-import { isError } from "../api/Error";
-import { ValidationPromise } from "../api/types";
+import { Schema } from "../api/Schema";
+import { RuleChain } from "../rules";
+import { AbstractValidator } from "./AbstractValidator";
 
 export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 	public get rule(): string {

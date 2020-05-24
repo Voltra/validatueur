@@ -1,5 +1,5 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Schema } from "../index";
+import { Schema } from "../api/Schema";
 import { noneIf } from "../api/types";
 import { Validatueur } from "../api/index";
 

@@ -1,8 +1,5 @@
 import {
 	Extended,
-	Result,
-	isNone,
-	Optional,
 	none,
 	ValidationPromise,
 } from "./types";

@@ -1,5 +1,5 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Schema } from "../index";
+import { Schema } from "../api/Schema";
 import { Validatueur } from "../api/index";
 export declare class Satisfies<T = any> extends AbstractValidator<T> {
     get rule(): string;

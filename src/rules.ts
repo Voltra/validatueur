@@ -1,5 +1,4 @@
 import { Validatueur } from "./api/index";
-import { isError } from "./api/Error";
 import { isNone } from "./api/types";
 
 const noop = <T>(): Validatueur.ValidatorWrapper<T> => {

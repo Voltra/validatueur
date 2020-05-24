@@ -8,7 +8,7 @@ import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, rules } from "../rules";
-import { Validatueur } from "../api/index";
+
 import {
 	contains,
 	RegularExpressions,
