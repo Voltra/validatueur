@@ -1,8 +1,4 @@
-import {
-	Extended,
-	none,
-	ValidationPromise,
-} from "./types";
+import { Extended, none, ValidationPromise } from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
