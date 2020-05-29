@@ -23,11 +23,9 @@
         "node_modules",
         "lib",
         "tests",
-        "dist",
-		"src/validators/index.d.ts"
+        "dist"
     ],
 	"include": [
-        "src",
-		"src/global.d.ts"
+        "src"
     ]
 }

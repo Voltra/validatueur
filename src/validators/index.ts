@@ -8,7 +8,6 @@ import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
 import { registerExtensionRule, RuleChain, rules } from "../rules";
-
 import {
 	contains,
 	RegularExpressions,
@@ -496,7 +495,7 @@ registerExtensionRule("password", function <T = string, U = T>(
 registerExtensionRule("startsWith", function <T = string, U = T>(
 	this: Validatueur.Extended<RuleChain<T, U>>,
 	start: string
-): RuleChain<string> {
+): RuleChain<T, U> {
 	return this.satisfies((value: T) => {
 		const str = asStr(value);
 		return str.startsWith(start);

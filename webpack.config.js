@@ -16,8 +16,17 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.tsx?$/i,
+				test: /(?!\.d)\.tsx?$/i,
 				use: "ts-loader",
+				include: here("src/"),
+				exclude: [
+					"node_modules/",
+					"test/"
+				].map(here),
+			},
+			{
+				test: /\.d\.tsx?$/i,
+				use: "null-loader",
 				include: here("src/"),
 				exclude: [
 					"node_modules/",
