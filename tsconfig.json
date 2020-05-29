@@ -7,7 +7,9 @@
 		"allowJs": true,
 		"declaration": true,
 		"declarationDir": "./lib/",
-		"lib": ["ESNext"],
+		"lib": [
+            "esnext"
+        ],
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
@@ -17,6 +19,13 @@
         "noImplicitThis": true,
         "moduleResolution": "node"
 	},
-	"exclude": ["node_modules", "lib", "tests", "dist"],
-	"include": ["src"]
+	"exclude": [
+        "node_modules",
+        "lib",
+        "tests",
+        "dist"
+    ],
+	"include": [
+        "src"
+    ]
 }
