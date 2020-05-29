@@ -1,4 +1,5 @@
 const path = require("path");
+const WebpackBar = require("webpackbar");
 
 /**
  * Create an absolute URL to the given URI inside the current directory
@@ -11,6 +12,12 @@ module.exports = {
 	mode: "production",
 	entry: here("./src/index.ts"),
 	devtool: "source-map",
+	plugins: [
+		new WebpackBar({
+			profile: true,
+			fancy: true,
+		}),
+	],
 	module: {
 		rules: [
 			{

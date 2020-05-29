@@ -1,9 +1,29 @@
-import { Extended, none, ValidationPromise } from "./types";
+import { Extended, isNone, none, ValidationPromise } from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
 import { Sanitizer } from "./Sanitizer";
 import { Validator, ValidatorWrapper } from "./Validator";
+
+export const getFirst = <T, U, A = T, B = U>(root: ValidatorWrapper<T, U>): ValidatorWrapper<A, B> => {
+	// backtrack to first rule
+	let first = (root as any) as ValidatorWrapper<A, B>;
+
+	while (!isNone(first.parent))
+		first = (first.parent as any) as ValidatorWrapper<A, B>;
+
+	return first;
+};
+
+export const getLast = <T, U, A = T, B = U>(root: ValidatorWrapper<T, U>): ValidatorWrapper<A, B> => {
+	// backtrack to last rule
+	let last = (root as any) as ValidatorWrapper<A, B>;
+
+	while (!isNone(last.child))
+		last = (last.child as any) as ValidatorWrapper<A, B>;
+
+	return last;
+};
 
 /**
  * Create an error object from the validation and formatting arguments

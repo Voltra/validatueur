@@ -1,5 +1,6 @@
 import { Validatueur } from "./api/index";
 import { isNone } from "./api/types";
+import { getFirst, getLast } from "./api/helpers";
 
 const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 	return {
@@ -21,27 +22,15 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 	};
 };
 
-export class RuleChain<T = any, U = T> {
+export class RuleChain<T = any, U = T>  implements Validatueur.Extended<RuleChain<T, U>>{
 	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {}
 
 	public __getFirst<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
-		// backtrack to first rule
-		let first = (this.root as any) as Validatueur.ValidatorWrapper<A, B>;
-
-		while (!isNone(first.parent))
-			first = (first.parent as any) as Validatueur.ValidatorWrapper<A, B>;
-
-		return first;
+		return getFirst<T, U, A, B>(this.root);
 	}
 
 	public __getLast<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
-		// backtrack to last rule
-		let last = (this.root as any) as Validatueur.ValidatorWrapper<A, B>;
-
-		while (!isNone(last.child))
-			last = (last.child as any) as Validatueur.ValidatorWrapper<A, B>;
-
-		return last;
+		return getLast<T, U, A, B>(this.root);
 	}
 
 	public async __validate(
@@ -101,8 +90,8 @@ export const registerExtensionRule = <T, U>(
 		...args: any[]
 	): Validatueur.Extended<RuleChain<T, U>> {
 		const child = fn(...args);
-		this.root.__getLast().child = child.__getFirst();
-		child.__getFirst().parent = this.root.__getLast();
+		this.__getLast().child = child.__getFirst();
+		child.__getFirst().parent = this.__getLast();
 		return child;
 	};
 };

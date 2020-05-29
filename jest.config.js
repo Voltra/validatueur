@@ -9,8 +9,5 @@ module.exports = {
 		"ts",
 		"tsx",
 	],
-	moduleNameMapper: {
-		"@/(.*)$": "./src/$1",
-	},
 	collectCoverage: true,
 };
