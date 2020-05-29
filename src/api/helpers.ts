@@ -5,7 +5,9 @@ import { precompile } from "./templating";
 import { Sanitizer } from "./Sanitizer";
 import { Validator, ValidatorWrapper } from "./Validator";
 
-export const getFirst = <T, U, A = T, B = U>(root: ValidatorWrapper<T, U>): ValidatorWrapper<A, B> => {
+export const getFirst = <T, U, A = T, B = U>(
+	root: ValidatorWrapper<T, U>
+): ValidatorWrapper<A, B> => {
 	// backtrack to first rule
 	let first = (root as any) as ValidatorWrapper<A, B>;
 
@@ -15,7 +17,9 @@ export const getFirst = <T, U, A = T, B = U>(root: ValidatorWrapper<T, U>): Vali
 	return first;
 };
 
-export const getLast = <T, U, A = T, B = U>(root: ValidatorWrapper<T, U>): ValidatorWrapper<A, B> => {
+export const getLast = <T, U, A = T, B = U>(
+	root: ValidatorWrapper<T, U>
+): ValidatorWrapper<A, B> => {
 	// backtrack to last rule
 	let last = (root as any) as ValidatorWrapper<A, B>;
 

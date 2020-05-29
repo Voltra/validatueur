@@ -22,7 +22,8 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 	};
 };
 
-export class RuleChain<T = any, U = T>  implements Validatueur.Extended<RuleChain<T, U>>{
+export class RuleChain<T = any, U = T>
+	implements Validatueur.Extended<RuleChain<T, U>> {
 	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {}
 
 	public __getFirst<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {

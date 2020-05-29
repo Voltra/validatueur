@@ -1,5 +1,5 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Schema } from "../index";
+import { Validatueur } from "../api";
 
 export class SameAs<T = any> extends AbstractValidator<T, any> {
 	public get rule(): string {
@@ -9,7 +9,7 @@ export class SameAs<T = any> extends AbstractValidator<T, any> {
 	protected __validate(
 		field: string,
 		value: T,
-		schema: Schema,
+		schema: Validatueur.Schema,
 		otherField: string
 	) {
 		return schema.__validateField(otherField, value);

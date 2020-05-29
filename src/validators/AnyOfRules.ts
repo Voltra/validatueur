@@ -1,5 +1,4 @@
-import { Validatueur } from "../api/index";
-import { Schema } from "../api/Schema";
+import { Validatueur } from "../api";
 import { RuleChain } from "../rules";
 import { AbstractValidator } from "./AbstractValidator";
 
@@ -10,7 +9,7 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 	protected async __validate(
 		field: string,
 		value: T,
-		schema: Schema,
+		schema: Validatueur.Schema,
 		...chains: RuleChain[]
 	): Validatueur.Promise<U> {
 		for (const chain of chains) {

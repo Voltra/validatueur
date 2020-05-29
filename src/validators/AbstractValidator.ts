@@ -1,4 +1,4 @@
-import { Validatueur } from "../api/index";
+import { Validatueur } from "../api";
 import { errorFrom } from "../api/helpers";
 import { extendRules } from "../rules";
 

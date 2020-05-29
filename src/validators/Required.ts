@@ -1,4 +1,4 @@
-import { Validatueur } from "../api/index";
+import { Validatueur } from "../api";
 import { AbstractValidator } from "./AbstractValidator";
 import { isValue } from "../utils";
 

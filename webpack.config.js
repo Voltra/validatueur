@@ -16,6 +16,7 @@ module.exports = {
 		new WebpackBar({
 			profile: true,
 			fancy: true,
+			basic: false,
 		}),
 	],
 	module: {

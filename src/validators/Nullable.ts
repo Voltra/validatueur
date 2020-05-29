@@ -1,5 +1,5 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Validatueur } from "../api/index";
+import { Validatueur } from "../api";
 import { isValue } from "../utils";
 import { RuleChain } from "../rules";
 

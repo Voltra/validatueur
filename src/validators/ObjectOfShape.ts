@@ -1,7 +1,6 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Schema } from "../api/Schema";
 import { noneIf } from "../api/types";
-import { Validatueur } from "../api/index";
+import { Validatueur } from "../api";
 
 export class ObjectOfShape<T = any> extends AbstractValidator<
 	T,
@@ -13,8 +12,8 @@ export class ObjectOfShape<T = any> extends AbstractValidator<
 	protected async __validate(
 		field: string,
 		value: T,
-		schema: Schema,
-		objectSchema: Schema
+		schema: Validatueur.Schema,
+		objectSchema: Validatueur.Schema
 	): Validatueur.Promise<Record<string, any>> {
 		await noneIf(typeof value !== "object", value);
 

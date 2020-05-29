@@ -389,6 +389,7 @@ registerExtensionRule(
 	}
 );
 
+// startsWith(prefix)
 registerExtensionRule("startsWith", <T = string>(start: string) => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);
@@ -396,6 +397,7 @@ registerExtensionRule("startsWith", <T = string>(start: string) => {
 	});
 });
 
+// endsWith(suffix)
 registerExtensionRule("endsWith", <T = string>(end: string) => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);
@@ -403,6 +405,7 @@ registerExtensionRule("endsWith", <T = string>(end: string) => {
 	});
 });
 
+// contains(needle)
 registerExtensionRule("contains", <T = string>(substr: string) => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);
@@ -410,6 +413,7 @@ registerExtensionRule("contains", <T = string>(substr: string) => {
 	});
 });
 
+// doesNotContain(needle)
 registerExtensionRule("doesNotContain", <T = string>(substr: string) => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);

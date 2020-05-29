@@ -1,5 +1,5 @@
 import { AbstractValidator } from "./AbstractValidator";
-import { Validatueur } from "../api/index";
+import { Validatueur } from "../api";
 import { asNumber, Sanitizers } from "../utils";
 
 //TODO: Move to sanitizers
