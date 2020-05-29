@@ -1,6 +1,6 @@
 import { isNone } from "./api/types";
 import { Validatueur } from "./api/index";
-import moment, * as Moment from "moment";
+import moment from "moment";
 
 export const isEmpty = (str: string) => /^\s*$/.test(str);
 
@@ -31,9 +31,9 @@ export const asNumber = <T>(value: T) => {
 	return integer === float ? integer : float;
 };
 
-export const asDate = <T = any>(value?: T, format?: string): Moment.Moment => {
+export const asDate = <T = any>(value?: T, format?: string): moment.Moment => {
 	// use strict mode of moments
-	return moment(value, format, true);
+	return moment.utc(value, format, true);
 };
 
 export const now = <T = any>(): ReturnType<typeof asDate> => {
@@ -58,11 +58,11 @@ export const Sanitizers = {
 		const nb = asNumber(value);
 		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
-	integer(value, base: number = 10) {
+	integer(value: any, base: number = 10) {
 		const nb = parseInt(value, base);
 		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
-	float(value) {
+	float(value: any) {
 		const nb = parseFloat(value);
 		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);
 	},
@@ -87,4 +87,4 @@ export const Sanitizers = {
 	},
 };
 
-export { moment, Moment };
+export { moment, }

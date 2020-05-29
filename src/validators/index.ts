@@ -15,10 +15,9 @@ import {
 	asNumber,
 	asStr,
 	asDate,
-	moment,
 	now,
-	Moment,
 } from "../utils";
+import moment from "moment";
 
 export interface BetweenArgs {
 	start: number;
@@ -486,8 +485,8 @@ registerExtensionRule("onLeapYear", <T = Date>(format?: string) => {
 registerExtensionRule(
 	"beforeOffsetOf",
 	<T = Date>(
-		amount?: Moment.DurationInputArg1,
-		unit?: Moment.DurationInputArg2,
+		amount?: moment.DurationInputArg1,
+		unit?: moment.DurationInputArg2,
 		format?: string
 	) => {
 		const now_ = now();
@@ -499,8 +498,8 @@ registerExtensionRule(
 registerExtensionRule(
 	"afterOffsetOf",
 	<T = Date>(
-		amount?: Moment.DurationInputArg1,
-		unit?: Moment.DurationInputArg2,
+		amount?: moment.DurationInputArg1,
+		unit?: moment.DurationInputArg2,
 		format?: string
 	) => {
 		const min = now().add(amount, unit);

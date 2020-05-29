@@ -42,5 +42,8 @@
 		"moment": "^2.26.0",
 		"sequency": "^0.19.2",
 		"string-template": "^1.0.0"
+	},
+	"engines": {
+		"node": ">=10.14.2"
 	}
 }

@@ -9,7 +9,7 @@ const here = (uri = "") => path.resolve(__dirname, uri);
 
 module.exports = {
 	mode: "production",
-	entry: "./src/index.ts",
+	entry: here("./src/index.ts"),
 	devtool: "source-map",
 	module: {
 		rules: [
@@ -17,19 +17,12 @@ module.exports = {
 				test: /\.tsx?$/i,
 				use: "ts-loader",
 				include: here("src/"),
-				exclude: [
-					"node_modules/",
-					"tests/",
-				].map(here),
+				exclude: [/node_modules/, /tests/],
 			},
 		],
 	},
 	resolve: {
-		extensions: [
-			"ts",
-			"js",
-			"tsx",
-		].map(ext => `.${ext}`),
+		extensions: ["ts", "js", "tsx"].map(ext => `.${ext}`),
 	},
 	output: {
 		filename: "index.js",
