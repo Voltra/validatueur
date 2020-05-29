@@ -21,8 +21,7 @@ import moment from "moment";
 import { Validatueur } from "../api";
 import { isNone } from "../api/types";
 
-
-export interface MinMaxArgs{
+export interface MinMaxArgs {
 	exclusive: boolean | Validatueur.None;
 	step: number | Validatueur.None;
 }
@@ -214,10 +213,10 @@ Ex:
 */
 registerExtensionRule(
 	"max",
-	<T = number>(max: number, {
-		exclusive = true,
-		step = Validatueur.none,
-	}: MinMaxArgs) => {
+	<T = number>(
+		max: number,
+		{ exclusive = true, step = Validatueur.none }: MinMaxArgs
+	) => {
 		return rules<T>().satisfies((value: T) => {
 			const nb = asNumber(value);
 			const modCheck = isNone(step) ? true : !((max - nb) % <number>step);
@@ -235,10 +234,10 @@ Ex:
 */
 registerExtensionRule(
 	"min",
-	<T = number>(min: number, {
-		exclusive = false,
-		step = Validatueur.none,
-	}: MinMaxArgs) => {
+	<T = number>(
+		min: number,
+		{ exclusive = false, step = Validatueur.none }: MinMaxArgs
+	) => {
 		//TODO: Double check in tests if steps & exclusion semantics work properly
 		return rules<T>().satisfies((value: T) => {
 			const nb = asNumber(value);
@@ -282,10 +281,12 @@ registerExtensionRule(
 		});
 
 		// warning bellow (on max's arguments) is due to wrong type deduction
-		return useEnd ? min.max(end as number, {
-			exclusive: endExclusive,
-			step,
-		}) : min;
+		return useEnd
+			? min.max(end as number, { //@ts-check-ignore
+					exclusive: endExclusive,
+					step,
+			  })
+			: min;
 	}
 );
 
@@ -308,9 +309,11 @@ Ex:
 	}
  */
 registerExtensionRule("withinAnyRange", <T = number>(ranges: BetweenArgs[]) => {
-	return rules<T>().anyOfRules(ranges.map((range: BetweenArgs) => {
-		return rules<T>().between(range);
-	}));
+	return rules<T>().anyOfRules(
+		ranges.map((range: BetweenArgs) => {
+			return rules<T>().between(range);
+		})
+	);
 });
 
 // notNaN()
@@ -332,7 +335,7 @@ registerExtensionRule(
 
 // minLength(n, exclusive=false)
 registerExtensionRule(
-	"maxLength",
+	"minLength",
 	<T = string>(min: number, exclusive: boolean = false) => {
 		return rules<T>().satisfies((value: T) => {
 			const str = asStr(value);
@@ -368,6 +371,29 @@ registerExtensionRule(
 			.maxLength(end, endExclusive);
 	}
 );
+
+/*
+	lengthInAnyRange(ranges)
+*/
+/*
+Ex:
+	{
+		stuff: rules().lengthInAnyRange([{
+			start: 1,
+			end: 7,
+		}, {
+			start: 9,
+			end: 15,
+		}]),
+	}
+*/
+registerExtensionRule("lengthInAnyRange", <T = string>(ranges: BetweenArgs[]) => {
+	return rules<T>().anyOfRules(
+		ranges.map((range: BetweenArgs) => {
+			return rules<T>().lengthBetween(range);
+		})
+	);
+});
 
 // regex(pattern, fullMatch=true)
 registerExtensionRule(
@@ -444,12 +470,15 @@ registerExtensionRule(
 );
 
 // startsWith(prefix)
-registerExtensionRule("startsWith", <T = string>(start: string): RuleChain<string> => {
-	return rules<T>().satisfies((value: T) => {
-		const str = asStr(value);
-		return str.startsWith(start);
-	});
-});
+registerExtensionRule(
+	"startsWith",
+	<T = string>(start: string): RuleChain<string> => {
+		return rules<T>().satisfies((value: T) => {
+			const str = asStr(value);
+			return str.startsWith(start);
+		});
+	}
+);
 
 // endsWith(suffix)
 registerExtensionRule("endsWith", <T = string>(end: string) => {
