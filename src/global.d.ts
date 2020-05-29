@@ -1,3 +1,3 @@
-declare global{
-	class RuleChain<T, U>{}
+declare global {
+	class RuleChain<T, U> {}
 }

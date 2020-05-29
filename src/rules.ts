@@ -103,7 +103,10 @@ export const extendRules = <T = any, U = T>(
 	name: string,
 	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
 ) => {
-	return registerExtensionRule(name, function (this: RuleChain<T, U>, ...args: any[]) {
+	return registerExtensionRule(name, function (
+		this: RuleChain<T, U>,
+		...args: any[]
+	) {
 		const wrapper = fn(...args);
 		return new RuleChain<T, U>(wrapper);
 	});
