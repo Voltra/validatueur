@@ -77,6 +77,7 @@ export class RuleChain<T = any, U = T>
 export const ruleExists = (name: string) => name in RuleChain.prototype;
 
 export type RuleExtension<T = any, U = T> = (
+	this: RuleChain<T, U>,
 	...args: any[]
 ) => Validatueur.Extended<RuleChain<T, U>>;
 
@@ -88,9 +89,10 @@ export const registerExtensionRule = <T, U>(
 		throw new ReferenceError(`Tried to redefine rule "${name}"`);
 
 	RuleChain.prototype[name] = function (
+		this: RuleChain<T, U>,
 		...args: any[]
 	): Validatueur.Extended<RuleChain<T, U>> {
-		const child = fn(...args);
+		const child = fn.call(this, ...args);
 		this.__getLast().child = child.__getFirst();
 		child.__getFirst().parent = this.__getLast();
 		return child;
@@ -101,7 +103,7 @@ export const extendRules = <T = any, U = T>(
 	name: string,
 	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
 ) => {
-	return registerExtensionRule(name, function (...args: any[]) {
+	return registerExtensionRule(name, function (this: RuleChain<T, U>, ...args: any[]) {
 		const wrapper = fn(...args);
 		return new RuleChain<T, U>(wrapper);
 	});
