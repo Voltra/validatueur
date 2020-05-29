@@ -1,5 +1,5 @@
 import { rules } from "./rules";
-import "./rules.typing"
+import "./rules.typing";
 
 export { Validatueur } from "./api/index";
 export { errorFrom, sanitizerWrapperGenerator } from "./api/helpers";

@@ -1,3 +1,3 @@
-import "./validators/index.typing"
+import "./validators/index.typing";
 
-export * from "./rules"
+export * from "./rules";
