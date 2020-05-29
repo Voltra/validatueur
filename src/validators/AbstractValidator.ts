@@ -16,6 +16,7 @@ export abstract class AbstractValidator<T = any, U = T>
 				schema,
 				args.args
 			);
+
 			return ret;
 		} catch (_) {
 			//TODO: Maybe refactor __validate interface to return result (instead of optional), would allow "error impersonation"

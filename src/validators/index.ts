@@ -7,7 +7,7 @@ import { ObjectOfShape } from "./ObjectOfShape";
 import { Required } from "./Required";
 import { SameAs } from "./SameAs";
 import { Satisfies } from "./Satisfies";
-import { registerExtensionRule, rules } from "../rules";
+import { registerExtensionRule, RuleChain, rules } from "../rules";
 
 import {
 	contains,
@@ -18,15 +18,25 @@ import {
 	now,
 } from "../utils";
 import moment from "moment";
+import { Validatueur } from "../api";
+import { isNone } from "../api/types";
+
+
+export interface MinMaxArgs{
+	exclusive: boolean | Validatueur.None;
+	step: number | Validatueur.None;
+}
 
 export interface BetweenArgs {
 	start: number;
-	end: number;
-	endExclusive: boolean | undefined;
-	startExclusive: boolean | undefined;
+	end: number | Validatueur.None;
+	endExclusive: boolean | Validatueur.None;
+	startExclusive: boolean | Validatueur.None;
+	step: number | Validatueur.None;
+	useEnd: boolean | Validatueur.None;
 }
 
-export interface PasswordArgs extends BetweenArgs {
+export interface PasswordArgs {
 	min: number;
 	max: number;
 	endExclusive: boolean;
@@ -204,10 +214,14 @@ Ex:
 */
 registerExtensionRule(
 	"max",
-	<T = number>(max: number, exclusive: boolean = true) => {
+	<T = number>(max: number, {
+		exclusive = true,
+		step = Validatueur.none,
+	}: MinMaxArgs) => {
 		return rules<T>().satisfies((value: T) => {
 			const nb = asNumber(value);
-			return exclusive ? nb < max : nb <= max;
+			const modCheck = isNone(step) ? true : !((max - nb) % <number>step);
+			return modCheck && (exclusive ? nb < max : nb <= max);
 		});
 	}
 );
@@ -221,10 +235,15 @@ Ex:
 */
 registerExtensionRule(
 	"min",
-	<T = number>(min: number, exclusive: boolean = false) => {
+	<T = number>(min: number, {
+		exclusive = false,
+		step = Validatueur.none,
+	}: MinMaxArgs) => {
+		//TODO: Double check in tests if steps & exclusion semantics work properly
 		return rules<T>().satisfies((value: T) => {
 			const nb = asNumber(value);
-			return exclusive ? nb > min : nb >= min;
+			const modCheck = isNone(step) ? true : !((nb - min) % <number>step);
+			return modCheck && (exclusive ? nb > min : nb >= min);
 		});
 	}
 );
@@ -251,13 +270,48 @@ registerExtensionRule(
 	"between",
 	<T = number>({
 		start,
-		end,
+		end = Validatueur.none,
 		endExclusive = true,
 		startExclusive = false,
+		step = Validatueur.none,
+		useEnd = true,
 	}: BetweenArgs) => {
-		return rules<T>().min(start, startExclusive).max(end, endExclusive);
+		const min = rules<T>().min(start, {
+			exclusive: startExclusive,
+			step,
+		});
+
+		// warning bellow (on max's arguments) is due to wrong type deduction
+		return useEnd ? min.max(end as number, {
+			exclusive: endExclusive,
+			step,
+		}) : min;
 	}
 );
+
+/*
+	withinAnyRange(ranges)
+*/
+/*
+Ex:
+	{
+		angle: rules().withinAnyRange([{
+			start: 1,
+			end: 4,
+		}, {
+			start: 10,
+			end: 33,
+		}, {
+			start: 45,
+			useMax: false,
+		}]),
+	}
+ */
+registerExtensionRule("withinAnyRange", <T = number>(ranges: BetweenArgs[]) => {
+	return rules<T>().anyOfRules(ranges.map((range: BetweenArgs) => {
+		return rules<T>().between(range);
+	}));
+});
 
 // notNaN()
 registerValidator(new NotNaN<number>());
@@ -377,7 +431,7 @@ registerExtensionRule(
 		endExclusive = true,
 		startExclusive = false,
 		useMax = true,
-	}: Partial<PasswordArgs> = {}) => {
+	}: Partial<PasswordArgs> = {}): RuleChain<string> => {
 		const chain = rules<T>()
 			.hasUppercaseLetter()
 			.hasLowercaseLetter()
@@ -390,7 +444,7 @@ registerExtensionRule(
 );
 
 // startsWith(prefix)
-registerExtensionRule("startsWith", <T = string>(start: string) => {
+registerExtensionRule("startsWith", <T = string>(start: string): RuleChain<string> => {
 	return rules<T>().satisfies((value: T) => {
 		const str = asStr(value);
 		return str.startsWith(start);
