@@ -12,6 +12,7 @@ export class SameAs<T = any> extends AbstractValidator<T, any> {
 		schema: Validatueur.Schema,
 		otherField: string
 	) {
+		//TODO: Assert same value
 		return schema.__validateField(otherField, value);
 	}
 }

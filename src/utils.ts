@@ -1,5 +1,5 @@
 import { isNone } from "./api/types";
-import { Validatueur } from "./api/index";
+import { Validatueur } from "./api";
 import moment from "moment";
 
 export const isEmpty = (str: string) => /^\s*$/.test(str);

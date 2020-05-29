@@ -282,7 +282,7 @@ registerExtensionRule(
 
 		// warning bellow (on max's arguments) is due to wrong type deduction
 		return useEnd
-			? min.max(end as number, { //@ts-check-ignore
+			? min.max(end as number, {
 					exclusive: endExclusive,
 					step,
 			  })
@@ -387,13 +387,16 @@ Ex:
 		}]),
 	}
 */
-registerExtensionRule("lengthInAnyRange", <T = string>(ranges: BetweenArgs[]) => {
-	return rules<T>().anyOfRules(
-		ranges.map((range: BetweenArgs) => {
-			return rules<T>().lengthBetween(range);
-		})
-	);
-});
+registerExtensionRule(
+	"lengthInAnyRange",
+	<T = string>(ranges: BetweenArgs[]) => {
+		return rules<T>().anyOfRules(
+			ranges.map((range: BetweenArgs) => {
+				return rules<T>().lengthBetween(range);
+			})
+		);
+	}
+);
 
 // regex(pattern, fullMatch=true)
 registerExtensionRule(

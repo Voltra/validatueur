@@ -5,8 +5,8 @@
 	"main": "dist/index.js",
 	"types": "lib/index.d.ts",
 	"scripts": {
-		"build": "webpack --colors",
-		"watch": "webpack --colors --watch",
+		"build": "webpack --colors --progress",
+		"watch": "webpack --colors --progress --watch",
 		"start": "npm run build",
 		"test": "jest",
 		"tdd": "jest --watchAll",
