@@ -7,4 +7,4 @@ export interface Error {
 }
 
 export const isError = (e: any) =>
-	e && ["field", "message", "rule"].every(key => key in e);
+	typeof e == "object" && e && ["field", "message", "rule"].every(key => key in e);
