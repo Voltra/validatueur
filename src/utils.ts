@@ -33,7 +33,7 @@ export const asNumber = <T>(value: T) => {
 
 export const asDate = <T = any>(value?: T, format?: string): moment.Moment => {
 	// use strict mode of moments
-	return moment.utc(value, format, true);
+	return moment(value, format, true);
 };
 
 export const now = <T = any>(): ReturnType<typeof asDate> => {
