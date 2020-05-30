@@ -1,7 +1,6 @@
 import { Validatueur } from "../api";
 import { RuleChain } from "../rules";
 import * as I from "./index";
-import { PasswordArgs } from "./index";
 
 declare module "../rules" {
 	interface RuleChain<T, U> {

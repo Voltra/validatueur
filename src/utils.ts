@@ -1,6 +1,7 @@
 import { isNone } from "./api/types";
 import { Validatueur } from "./api";
 import moment from "moment";
+import { generateSequence } from "sequency";
 
 export const isEmpty = (str: string) => /^\s*$/.test(str);
 
@@ -40,11 +41,29 @@ export const now = <T = any>(): ReturnType<typeof asDate> => {
 	return asDate(undefined);
 };
 
+const ipv4: RegExp = (() => {
+	const max = "25[0-5]";
+	const twos = "2[0-4][0-9]";
+	const ones = "(?:1[0-9]|[1-9])?[0-9]";
+
+	const part = `(${max}|${twos}|${ones})`;
+	const re = generateSequence(() => part)
+	.take(4)
+	.joinToString({
+		separator: "\.",
+		prefix: "^",
+		postfix: "$",
+	});
+
+	return new RegExp(re);
+})();
+
 export const RegularExpressions = {
 	digit: /[0-9]/,
 	lowercaseLetter: /[a-z]/,
 	uppercaseLetter: /[A-Z]/,
-	specialCharacter: /[\/\.!\?\[\]\(\)\{\}\<\>\^\$€#@,;:\-_%&~"'`\|=\+\*]/,
+	specialCharacter: /[\/.!?\[\](){}<>^$€#@,;:\-_%&~"'`|=+*]/,
+	ipv4,
 };
 
 export const Sanitizers = {
