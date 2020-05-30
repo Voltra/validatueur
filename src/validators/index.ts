@@ -384,9 +384,16 @@ Ex:
 */
 registerExtensionRule("lengthBetween", function <T = string, U = T>(
 	this: Validatueur.Extended<RuleChain<T, U>>,
-	{ start, end, endExclusive = true, startExclusive = false }: BetweenArgs
+	{
+		start,
+		end,
+		endExclusive = true,
+		startExclusive = false,
+		useEnd = true,
+	}: BetweenArgs
 ) {
-	return this.minLength(start, startExclusive).maxLength(end, endExclusive);
+	const min = this.minLength(start, startExclusive);
+	return useEnd ? min.maxLength(<number>end, endExclusive) : min;
 });
 
 /*
@@ -452,7 +459,10 @@ registerRegexRule(
 );
 
 // hasLowercaseLetter()
-registerRegexRule("hasDigit", () => RegularExpressions.lowercaseLetter);
+registerRegexRule(
+	"hasLowercaseLetter",
+	() => RegularExpressions.lowercaseLetter
+);
 
 // hasDigit()
 registerRegexRule("hasDigit", () => RegularExpressions.digit);
@@ -502,6 +512,17 @@ registerExtensionRule("startsWith", function <T = string, U = T>(
 	});
 });
 
+// doesNotStartWith(prefix)
+registerExtensionRule("doesNotStartWith", function <T = string, U = T>(
+	this: Validatueur.Extended<RuleChain<T, U>>,
+	start: string
+): RuleChain<T, U> {
+	return this.satisfies((value: T) => {
+		const str = asStr(value);
+		return !str.startsWith(start);
+	});
+});
+
 // endsWith(suffix)
 registerExtensionRule("endsWith", function <T = string, U = T>(
 	this: Validatueur.Extended<RuleChain<T, U>>,
@@ -510,6 +531,17 @@ registerExtensionRule("endsWith", function <T = string, U = T>(
 	return this.satisfies((value: T) => {
 		const str = asStr(value);
 		return str.endsWith(end);
+	});
+});
+
+// doesNotEndWith(suffix)
+registerExtensionRule("doesNotEndWith", function <T = string, U = T>(
+	this: Validatueur.Extended<RuleChain<T, U>>,
+	end: string
+) {
+	return this.satisfies((value: T) => {
+		const str = asStr(value);
+		return !str.endsWith(end);
 	});
 });
 

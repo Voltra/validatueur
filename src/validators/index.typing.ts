@@ -1,6 +1,7 @@
 import { Validatueur } from "../api";
 import { RuleChain } from "../rules";
 import * as I from "./index";
+import { PasswordArgs } from "./index";
 
 declare module "../rules" {
 	interface RuleChain<T, U> {
@@ -211,6 +212,160 @@ declare module "../rules" {
 
 		/****************************************************************************\
 		 * Strings
+		\****************************************************************************/
+		/**
+		 * Assert that the value's length does not exceed to given max value
+		 * @param max - The maximum length
+		 * @param [exclusive = true] - Whether or not to exclude the maximum length
+		 */
+		maxLength<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			max: number,
+			exclusive?: boolean
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the value's length is at least the given min value
+		 * @param min - The minimum length
+		 * @param [exclusive = false] - Whether or not to exclude the minimum length
+		 */
+		minLength<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			min: number,
+			exclusive?: boolean
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the length is within the given range
+		 * @param options
+		 * @param options.start - The start of the range (minimum length)
+		 * @param options.end - The end of the range (maximum length)
+		 * @param [options.startExclusive = false] - Whether or not to exclude the start of the range
+		 * @param [options.endExclusive = true] - Whether or not to exclude the end of the range
+		 */
+		lengthBetween<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			options: I.BetweenArgs
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the length is within one of the given ranges
+		 * @param ranges - The exhaustive list of ranges to check against
+		 */
+		lengthInAnyRange<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			ranges: I.BetweenArgs[]
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string matches the given pattern
+		 * @param pattern - The regular expression to test against
+		 * @param [fullMatch = true] - Whether it should match the entire string or not
+		 */
+		regex<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			pattern: RegExp,
+			fullMatch?: boolean
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string contains an uppercase letter
+		 */
+		hasUppercaseLetter<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string contains a lowercase letter
+		 */
+		hasLowercaseLetter<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string contains a digit
+		 */
+		hasDigit<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string contains a special character
+		 */
+		hasSpecialCharacter<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string is a decent password (8-100 characters, an uppercase letter, a lowercase letter, a digit and a special character)
+		 * @param [options = {}]
+		 * @param [options.min = 8]
+		 * @param [options.max = 100]
+		 * @param [options.endExclusive = true]
+		 * @param [options.startExclusive = false]
+		 * @param [options.useMax = true]
+		 */
+		password<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			options?: Partial<I.PasswordArgs>
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string starts with the given prefix
+		 * @param prefix - The prefix the string should start with
+		 */
+		startsWith<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			prefix: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string does not start with the given prefix
+		 * @param prefix - The prefix the string should not start with
+		 */
+		doesNotStartWith<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			prefix: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string ends with the given suffix
+		 * @param suffix - The suffix the string should end with
+		 */
+		endsWith<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			suffix: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string does not end with the given suffix
+		 * @param suffix - The suffix the string should not end with
+		 */
+		doesNotEndWith<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			suffix: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string contains the given needle
+		 * @param needle - The string to contain
+		 */
+		contains<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			needle: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/**
+		 * Assert that the string does not contain the given needle
+		 * @param needle - The string to not contain
+		 */
+		doesNotContain<A = string, B = A>(
+			this: Validatueur.Extended<RuleChain<A, B>>,
+			needle: string
+		): Validatueur.Extended<RuleChain<A, B>>;
+
+		/****************************************************************************\
+		 * Dates
 		\****************************************************************************/
 	}
 }
