@@ -112,9 +112,8 @@ export const extendRules = <T = any, U = T>(
 	});
 };
 
-/**
- * @returns {}
- */
 export const rules = <T = any>(): Validatueur.Extended<RuleChain<T>> => {
 	return new RuleChain<T>(noop<T>());
 };
+
+export type Rules = Record<string, RuleChain>;

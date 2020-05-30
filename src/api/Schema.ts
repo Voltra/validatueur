@@ -1,10 +1,10 @@
 import { ValidatedSchema } from "./ValidatedSchema";
-import { RuleChain } from "../rules";
+import { RuleChain, Rules } from "../rules";
 import { Validatueur } from "./index";
 import { Messages } from "./Messages";
 
 export interface SchemaArgs {
-	rules: Record<string, RuleChain>;
+	rules: Rules;
 	messages: Messages;
 }
 
@@ -22,9 +22,10 @@ export class Schema {
 	}
 
 	public includeExtra = false;
+	public rawData: Validatueur.Values = {};
 
 	protected constructor(
-		public readonly ruleSet: Record<string, RuleChain>,
+		public readonly ruleSet: Rules,
 		public readonly messages: Messages
 	) {}
 
@@ -47,7 +48,7 @@ export class Schema {
 	}
 
 	public async validate(
-		values: Record<string, any>,
+		values: Validatueur.Values,
 		includeExtra: boolean = false
 	): Validatueur.Promise<ValidatedSchema> {
 		const ret: ValidatedSchema = {
@@ -57,6 +58,9 @@ export class Schema {
 		};
 
 		this.includeExtra = includeExtra;
+		this.rawData = values; //TODO: make a deep copy to avoid unintended mutations
+
+		const errorMap = new Map<string, Validatueur.Error>();
 
 		for (const [field, value] of Object.entries(values)) {
 			if (!(field in this.ruleSet) && !this.includeExtra) continue;
@@ -65,11 +69,20 @@ export class Schema {
 				const newValue = await this.__validateField(field, value);
 				ret.values[field] = newValue;
 			} catch (error) {
-				if (Array.isArray(error)) ret.errors.push(...error);
-				else ret.errors.push(error);
+				/*if (Array.isArray(error)) ret.errors.push(...error);
+				else ret.errors.push(error);*/
+				if(Array.isArray(error)){
+					error.forEach((e: Validatueur.Error) => {
+						if(!errorMap.has(e.field))
+							errorMap.set(e.field, e);
+					});
+				}else if(!errorMap.has(error.field)){
+					errorMap.set(error.field, error);
+				}
 			}
 		}
 
+		ret.errors = [...errorMap.values()];
 		ret.valid = ret.errors.length <= 0;
 		return ret;
 	}

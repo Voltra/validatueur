@@ -9,6 +9,7 @@ import {
 } from "./types";
 import { Messages as _Messages } from "./Messages";
 import { Error as _Error } from "./Error";
+import { Values as _Values } from "./Values";
 import {
 	ValidatorArgs as _ValidatorArgs,
 	FormatArgs as _FormatArgs,
@@ -33,6 +34,7 @@ export namespace Validatueur {
 
 	export type Messages = _Messages;
 	export type Error = _Error;
+	export type Values = _Values;
 
 	export type ValidatorArgs = _ValidatorArgs;
 	export type FormatArgs = _FormatArgs;

@@ -8,24 +8,25 @@
 		"declaration": true,
 		"declarationDir": "./lib/",
 		"lib": [
-            "esnext"
-        ],
+			"esnext"
+		],
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
+		"downlevelIteration": true,
 		"noImplicitAny": false,
 		"noImplicitReturns": true,
-        "noImplicitThis": true,
-        "moduleResolution": "node"
+		"noImplicitThis": true,
+		"moduleResolution": "node"
 	},
 	"exclude": [
-        "node_modules",
-        "lib",
-        "tests",
-        "dist"
-    ],
+		"node_modules",
+		"lib",
+		"tests",
+		"dist"
+	],
 	"include": [
-        "src"
-    ]
+		"src"
+	]
 }
