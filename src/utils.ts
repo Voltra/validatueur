@@ -48,12 +48,12 @@ const ipv4: RegExp = (() => {
 
 	const part = `(${max}|${twos}|${ones})`;
 	const re = generateSequence(() => part)
-	.take(4)
-	.joinToString({
-		separator: "\.",
-		prefix: "^",
-		postfix: "$",
-	});
+		.take(4)
+		.joinToString({
+			separator: ".",
+			prefix: "^",
+			postfix: "$",
+		});
 
 	return new RegExp(re);
 })();
