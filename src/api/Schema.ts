@@ -71,12 +71,11 @@ export class Schema {
 			} catch (error) {
 				/*if (Array.isArray(error)) ret.errors.push(...error);
 				else ret.errors.push(error);*/
-				if(Array.isArray(error)){
+				if (Array.isArray(error)) {
 					error.forEach((e: Validatueur.Error) => {
-						if(!errorMap.has(e.field))
-							errorMap.set(e.field, e);
+						if (!errorMap.has(e.field)) errorMap.set(e.field, e);
 					});
-				}else if(!errorMap.has(error.field)){
+				} else if (!errorMap.has(error.field)) {
 					errorMap.set(error.field, error);
 				}
 			}
