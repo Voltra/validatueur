@@ -1,4 +1,4 @@
-import { Error, isError } from "../../src/api/Error";
+import { Error, isError } from "@/api/Error";
 
 const field = "my-field";
 const message = "my error message";

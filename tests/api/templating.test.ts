@@ -1,5 +1,5 @@
-import { precompile } from "../../src/api/templating";
-import { FormatArgs } from "../../src/api/ValidatorArgs";
+import { precompile } from "@/api/templating";
+import { FormatArgs } from "@/api/ValidatorArgs";
 
 describe("precompile", function () {
 	it("renders the given string if no formatting is given", function () {

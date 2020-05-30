@@ -30,11 +30,9 @@
 	"devDependencies": {
 		"@types/jest": "^25.2.3",
 		"@types/string-template": "^1.0.2",
-		"chalk": "^4.0.0",
 		"jest": "^26.0.1",
 		"null-loader": "^4.0.0",
 		"prettier": "^2.0.5",
-		"progress-bar-webpack-plugin": "^2.1.0",
 		"ts-jest": "^26.0.0",
 		"ts-loader": "^7.0.4",
 		"typescript": "^3.9.2",
