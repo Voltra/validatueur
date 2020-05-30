@@ -83,6 +83,7 @@ export class Schema {
 
 		ret.errors = [...errorMap.values()];
 		ret.valid = ret.errors.length <= 0;
+		this.rawData = {}; // reset the raw data to avoid further modifications/access
 		return ret;
 	}
 }
