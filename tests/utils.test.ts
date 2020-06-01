@@ -79,22 +79,17 @@ describe("isValue", function () {
 
 describe("trim", function () {
 	it("should not change strings that do not end with (or start with) whitespace(s)", function () {
-		[
-			"str",
-			"je suis là",
-			"yolo",
-			"",
-		].forEach(e => expect(trim(e)).toBe(e));
+		["str", "je suis là", "yolo", ""].forEach(e => expect(trim(e)).toBe(e));
 	});
 
-	it("should remove leading whitespace", function(){
+	it("should remove leading whitespace", function () {
 		[
 			[" str", "str"],
-			["  str str", "str str"]
+			["  str str", "str str"],
 		].forEach(([value, expected]) => expect(trim(value)).toBe(expected));
 	});
 
-	it("should remove trailing whitespace", function(){
+	it("should remove trailing whitespace", function () {
 		[
 			["str  ", "str"],
 			["str str    ", "str str"],
@@ -102,38 +97,40 @@ describe("trim", function () {
 	});
 });
 
-describe("contains", function(){
-	it("finds the value if there", function(){
-		[
-			[[2], 2]
-		].forEach(([arr, value]) => expect(contains(<any[]>arr, value)).toBeTruthy());
+describe("contains", function () {
+	it("finds the value if there", function () {
+		[[[2], 2]].forEach(([arr, value]) =>
+			expect(contains(<any[]>arr, value)).toBeTruthy()
+		);
 	});
 
-	it("does not do weird conversions", function(){
+	it("does not do weird conversions", function () {
 		[
-			[ [""], [] ],
-			[ [[]], "" ],
+			[[""], []],
+			[[[]], ""],
 
-			[ [[""]], "" ],
-			[ [""], [""] ],
+			[[[""]], ""],
+			[[""], [""]],
 
-			[ [false], [] ],
-			[ [[]], false ],
+			[[false], []],
+			[[[]], false],
 
-			[ [false], "" ],
-			[ [""], false ],
+			[[false], ""],
+			[[""], false],
 
-			[ [false], 0 ],
-			[ [0], false ],
+			[[false], 0],
+			[[0], false],
 
-			[ [true], 1 ],
-			[ [1], true ],
+			[[true], 1],
+			[[1], true],
 
-			[ [[0]], 0 ],
-			[ [0], [0] ],
+			[[[0]], 0],
+			[[0], [0]],
 
-			[ [[""]], 0 ],
-			[ [0], [""] ],
-		].forEach(([arr, value]) => expect(contains(<any[]>arr, value)).toBeFalsy());
+			[[[""]], 0],
+			[[0], [""]],
+		].forEach(([arr, value]) =>
+			expect(contains(<any[]>arr, value)).toBeFalsy()
+		);
 	});
 });
