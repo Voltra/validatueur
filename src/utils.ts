@@ -12,7 +12,11 @@ export const asStr = <T>(value: T) => {
 };
 
 export const isValue = <T>(value: T) => {
-	return !isNone(value) && !isEmpty(asStr(value));
+	if (isNone(value) || typeof value === "function") return false;
+
+	if (Array.isArray(value)) return true;
+
+	return !isEmpty(asStr(value));
 };
 
 export const trim = <T>(value: T) => asStr(value).trim();
