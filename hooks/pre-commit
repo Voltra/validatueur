@@ -2,3 +2,4 @@
 source "$(dirname $0)/.utils"
 
 __noStdout npm run format
+__noStdout npm run docs
