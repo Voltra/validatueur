@@ -30,7 +30,6 @@
 	"homepage": "https://github.com/Voltra/validatueur#readme",
 	"devDependencies": {
 		"@types/jest": "^25.2.3",
-		"@types/string-template": "^1.0.2",
 		"jest": "^26.0.1",
 		"null-loader": "^4.0.0",
 		"prettier": "^2.0.5",
@@ -45,8 +44,7 @@
 	"dependencies": {
 		"moment": "^2.26.0",
 		"pope": "^2.0.2",
-		"sequency": "^0.19.2",
-		"string-template": "^1.0.0"
+		"sequency": "^0.19.2"
 	},
 	"engines": {
 		"node": ">=10.14.2"

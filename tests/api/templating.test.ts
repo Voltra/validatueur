@@ -23,7 +23,7 @@ describe("precompile", function () {
 
 	it("can use the arguments array", function () {
 		const args = ["yolo", "patalo"];
-		const message = "This is {args0} then {args1}";
+		const message = "This is {{ args.0 }} then {{ args.1 }}";
 
 		const render = precompile({
 			args,
@@ -40,7 +40,7 @@ describe("precompile", function () {
 		expect(
 			precompile({
 				args: [],
-				message: "oh no, a {field}",
+				message: "oh no, a {{ field }}",
 				field: "test",
 			})({ rule: "test" })
 		).toEqual("oh no, a test");
@@ -50,19 +50,25 @@ describe("precompile", function () {
 		expect(
 			precompile({
 				args: [],
-				message: "oh no, a {rule}",
+				message: "oh no, a {{ rule }}",
 				field: "test42",
 			})({ rule: "test" })
 		).toEqual("oh no, a test");
 	});
 
-	it("removes unknown interpolation key", function () {
-		expect(
-			precompile({
-				args: [],
-				message: "str {mlakzjdml}",
-				field: "test",
-			})({ rule: "test" })
-		).toEqual("str ");
+	it("should leave undefined interpolation keys", function () {
+		[
+			"I am {{ key }}",
+			"I do not {{ exist }}",
+			"Oh oh {{ Jotaro }}",
+		].forEach(message =>
+			expect(
+				precompile({
+					args: [],
+					message,
+					field: "some-field",
+				})({ rule: "some-rule" })
+			).toEqual(message)
+		);
 	});
 });
