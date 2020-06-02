@@ -185,21 +185,62 @@ describe("asDate", function () {
 			new Date(),
 			new Date(98, 11, 15),
 			new Date("December 15, 1998"),
-		].forEach(date => expect(asDate(date).toDate()).toStrictEqual(date));
+		].forEach(date => {
+			const mdate = asDate(date);
+			expect(mdate.isValid()).toBeTruthy();
+			expect(mdate.toDate()).toStrictEqual(date);
+		});
 	});
 
 	it("parses Date utilities", function () {
 		[
 			[Date.now(), undefined],
-			// [Date(), moment.RFC_2822],
-		].forEach(([date, fmt]: any[]) =>
-			expect(asDate(date, fmt).toDate()).toStrictEqual(new Date(date))
-		);
+			// [Date(), moment.RFC_2822], // no longer supported
+		].forEach(([date, fmt]: any[]) => {
+			const mdate = asDate(date, fmt);
+			expect(mdate.isValid()).toBeTruthy();
+			expect(mdate.toDate()).toStrictEqual(new Date(date))
+		});
 	});
 
 	it("can handle user defined formats", function () {
-		[["15/12/1998", "DD/MM/YYYY"]].forEach(([str, fmt]) =>
+		[
+			["15/12/1998", "DD/MM/YYYY"],
+			["15/12/1998 21:00", "DD/MM/YYYY HH:mm"],
+			["12 1998 15", "MM YYYY DD"],
+			["12 00 1998 21 15", "MM mm YYYY HH DD"],
+		].forEach(([str, fmt]) =>
 			expect(asDate(str, fmt).isValid()).toBeTruthy()
 		);
+	});
+
+	it("can handle predefined momentjs formats", function(){
+		[
+			["1998-12-15T21:00:00", moment.ISO_8601],
+			["2017-12-14T16:34", moment.HTML5_FMT.DATETIME_LOCAL],
+			["2017-12-14T16:34:10", moment.HTML5_FMT.DATETIME_LOCAL_SECONDS],
+			["2017-12-14T16:34:10.234", moment.HTML5_FMT.DATETIME_LOCAL_MS],
+			["2017-12-14", moment.HTML5_FMT.DATE],
+			["16:34", moment.HTML5_FMT.TIME],
+			["16:34:10", moment.HTML5_FMT.TIME_SECONDS],
+			["16:34:10.234", moment.HTML5_FMT.TIME_MS],
+			["2017-W50", moment.HTML5_FMT.WEEK],
+			["2017-12", moment.HTML5_FMT.MONTH],
+		].forEach(([str, fmt]) => expect(asDate(str, fmt).isValid()).toBeTruthy());
+	});
+
+	it("fails to parse invalid input (moment instance is invalid)", function(){
+		[
+			"2016 aze",
+			"invalid date lmao",
+			"2016-12-24 random",
+		].forEach(date => expect(asDate(date).isValid()).toBeFalsy());
+	});
+
+	it("fails to parse input that does not match the format (moment instance is invalid)", function(){
+		[
+			["2016-12-24", "YYYY/MM/DD"],
+			["24/12/2016", "MM/DD/YYYY"],
+		].forEach(([str, fmt]) => expect(asDate(str, fmt).isValid()).toBeFalsy());
 	});
 });
