@@ -36,7 +36,13 @@ export const asNumber = <T>(value: T) => {
 	return integer === float ? integer : float;
 };
 
-export const asDate = <T = any>(value?: T, format?: string|moment.MomentBuiltinFormat|moment.MomentFormatSpecification): moment.Moment => {
+export const asDate = <T = any>(
+	value?: T,
+	format?:
+		| string
+		| moment.MomentBuiltinFormat
+		| moment.MomentFormatSpecification
+): moment.Moment => {
 	//NOTE: Date() is not supported
 	// use strict mode of moments
 	return moment(value, format, true);

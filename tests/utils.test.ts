@@ -1,6 +1,14 @@
-import { isEmpty, asStr, isValue, trim, contains, asNumber, asDate } from "@/utils";
+import {
+	isEmpty,
+	asStr,
+	isValue,
+	trim,
+	contains,
+	asNumber,
+	asDate,
+} from "@/utils";
 import { generateSequence, range } from "sequency";
-import moment from "moment"
+import moment from "moment";
 
 describe("isEmpty", function () {
 	it("is true on the empty string", function () {
@@ -161,7 +169,7 @@ describe("asNumber", function () {
 		].forEach(([str, expected]) => expect(asNumber(str)).toBe(expected));
 	});
 
-	it("gives back NaN on non numbers", function(){
+	it("gives back NaN on non numbers", function () {
 		[
 			"this is not a number",
 			"and so is this",
@@ -171,8 +179,8 @@ describe("asNumber", function () {
 	});
 });
 
-describe("asDate", function(){
-	it("parses Date objects", function(){
+describe("asDate", function () {
+	it("parses Date objects", function () {
 		[
 			new Date(),
 			new Date(98, 11, 15),
@@ -180,16 +188,18 @@ describe("asDate", function(){
 		].forEach(date => expect(asDate(date).toDate()).toStrictEqual(date));
 	});
 
-	it("parses Date utilities", function(){
+	it("parses Date utilities", function () {
 		[
 			[Date.now(), undefined],
 			// [Date(), moment.RFC_2822],
-		].forEach(([date, fmt]: any[]) => expect(asDate(date, fmt).toDate()).toStrictEqual(new Date(date)));
+		].forEach(([date, fmt]: any[]) =>
+			expect(asDate(date, fmt).toDate()).toStrictEqual(new Date(date))
+		);
 	});
 
-	it("can handle user defined formats", function(){
-		[
-			["15/12/1998", "DD/MM/YYYY"]
-		].forEach(([str, fmt]) => expect(asDate(str, fmt).isValid()).toBeTruthy());
+	it("can handle user defined formats", function () {
+		[["15/12/1998", "DD/MM/YYYY"]].forEach(([str, fmt]) =>
+			expect(asDate(str, fmt).isValid()).toBeTruthy()
+		);
 	});
 });
