@@ -3,6 +3,8 @@ import format from "string-template";
 import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs";
 import { Extended } from "./types";
 
+//TODO: rewrite using pope
+
 const recordFromArgs = (args: ValidatorArgs) => {
 	const rec: Record<string, any> = {
 		...args,
