@@ -9,7 +9,7 @@
 [![Discord Banner 2](https://discordapp.com/api/guilds/369952114547490817/widget.png?style=banner2)](https://discord.com/invite/JtWAjbw)
 
 <center>
-	<picture style="filter: invert(1); width: 250px; display: block;">
+	<picture style="backdrop-filter: invert(1); width: 250px; display: block;">
         <source srcset="./res/validatueur.png"/>
 		<source srcset="https://github.com/Voltra/validatueur/tree/dev/res/validatueur.png"/>
     	<img src="https://github.com/Voltra/validatueur/tree/master/res/validatueur.png" alt="Validatueur Logo"/>
