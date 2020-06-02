@@ -1,4 +1,4 @@
-import { pope } from "pope";
+import { pope } from "pope/index";
 import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs";
 import { Extended } from "./types";
 
