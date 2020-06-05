@@ -6,6 +6,7 @@ import {
 	contains,
 	asNumber,
 	asDate,
+	now,
 } from "@/utils";
 import { generateSequence, range } from "sequency";
 import moment from "moment";
@@ -244,5 +245,15 @@ describe("asDate", function () {
 		].forEach(([str, fmt]) =>
 			expect(asDate(str, fmt).isValid()).toBeFalsy()
 		);
+	});
+});
+
+describe("now", function(){
+	it("gives the current date", function(){
+		const nnow = now();
+		const ndate = new Date();
+
+		expect(nnow.isValid()).toBeTruthy();
+		expect(nnow.toDate()).toStrictEqual(ndate);
 	});
 });
