@@ -7,6 +7,7 @@ import {
 	asNumber,
 	asDate,
 	now,
+	RegularExpressions,
 } from "@/utils";
 import { generateSequence, range } from "sequency";
 import moment from "moment";
@@ -248,12 +249,33 @@ describe("asDate", function () {
 	});
 });
 
-describe("now", function(){
-	it("gives the current date", function(){
+describe("now", function () {
+	it("gives the current date", function () {
 		const nnow = now();
 		const ndate = new Date();
 
 		expect(nnow.isValid()).toBeTruthy();
-		expect(nnow.toDate()).toStrictEqual(ndate);
+		
+		expect(nnow.endOf("day").toDate()).toStrictEqual(moment(ndate).endOf("day").toDate());
+	});
+});
+
+describe("RegularExpressions", function(){
+	describe(".digit", function(){
+		const re = RegularExpressions.digit;
+
+		it("matches on strings containing digit(s)", function(){
+			[
+				"123",
+				"aze123",
+				"a4e",
+			].forEach(str => expect(re.test(str)).toBeTruthy());
+		});
+
+		it("fails on strings that do not contain digit(s)", function(){
+			[
+				"no digits here",
+			].forEach(str => expect(re.test(str)).toBeFalsy());
+		});
 	});
 });
