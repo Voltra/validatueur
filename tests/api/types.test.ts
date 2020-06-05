@@ -20,15 +20,25 @@ describe("isNone", function () {
 });
 
 describe("noneIf", function () {
-	it("resolves to the value if the condition is true", function () {
-		[0, 42, "str", NaN].forEach(value =>
-			expect(noneIf(true, value)).resolves.toStrictEqual(value)
-		);
+	it("resolves to the value if the condition is true", async function () {
+		const data = [0, 42, "str", NaN];
+
+		for (const value of data) {
+			const res = await noneIf(true, value);
+			expect(res).toStrictEqual(value);
+		}
 	});
 
-	it("rejects to none if the condition is false", function () {
-		[0, 42, "str", NaN].forEach(value =>
-			expect(noneIf(false, value)).rejects.toStrictEqual(none)
-		);
+	it("rejects to none if the condition is false", async function () {
+		const data = [0, 42, "str", NaN];
+		expect.assertions(data.length);
+
+		for (const value of data) {
+			try {
+				await noneIf(false, value);
+			} catch (e) {
+				expect(e).toStrictEqual(none);
+			}
+		}
 	});
 });
