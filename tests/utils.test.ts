@@ -276,4 +276,69 @@ describe("RegularExpressions", function () {
 			["no digits here"].forEach(str => expect(re.test(str)).toBeFalsy());
 		});
 	});
+
+	describe(".lowercaseLetter", function () {
+		const re = RegularExpressions.lowercaseLetter;
+
+		it("matches on strings containing lowercase letter(s)", function () {
+			["a4", "12a23", "aze"].forEach(str =>
+				expect(re.test(str)).toBeTruthy()
+			);
+		});
+
+		it("fails on strings that do not contain lowercase letter(s)", function () {
+			["A4", "123", "é"].forEach(str => expect(re.test(str)).toBeFalsy());
+		});
+	});
+
+	describe(".uppercaseLetter", function () {
+		const re = RegularExpressions.uppercaseLetter;
+
+		it("matches on strings containing uppercase letter(s)", function () {
+			["A4", "12A23", "aZe"].forEach(str =>
+				expect(re.test(str)).toBeTruthy()
+			);
+		});
+
+		it("fails on strings that do not contain uppercase letter(s)", function () {
+			["a4", "123", "É"].forEach(str => expect(re.test(str)).toBeFalsy());
+		});
+	});
+
+	describe(".specialCharacter", function () {
+		const re = RegularExpressions.specialCharacter;
+
+		it("matches on strings containing special character(s)", function () {
+			[
+				//TODO: Add more tests
+				"A4@",
+				"^12A23",
+				"a$Ze",
+				"a)",
+				"pwd(",
+				"}",
+				"{_",
+			].forEach(str => expect(re.test(str)).toBeTruthy());
+		});
+
+		it("fails on strings that do not contain special character(s)", function () {
+			["a4", "123", "É", "A45z"].forEach(str =>
+				expect(re.test(str)).toBeFalsy()
+			);
+		});
+	});
+
+	describe(".ipv4", function () {
+		const re = RegularExpressions.ipv4;
+
+		it("matches valid IPv4 addresses", function () {
+			const gen = () => range(0, 255);
+			gen()
+				.zip(gen())
+				.zip(gen())
+				.zip(gen())
+				.map(([[[a, b], c], d]) => `${a}.${b}.${c}.${d}`)
+				.forEach(ip => expect(re.test(ip)).toBeTruthy());
+		});
+	});
 });
