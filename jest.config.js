@@ -2,6 +2,7 @@ const { defaults } = require("jest-config");
 
 module.exports = {
 	preset: "ts-jest",
+	clearMocks: true,
 	testEnvironment: "node",
 	testRegex: "\.test\.ts$",
 	moduleFileExtensions: [
@@ -10,7 +11,7 @@ module.exports = {
 		"tsx",
 	],
 	moduleNameMapper: {
-		"@/(.*)$": "./src/$1",
+		"^@/(.*)$": "<rootDir>/src/$1"
 	},
 	collectCoverage: true,
 };

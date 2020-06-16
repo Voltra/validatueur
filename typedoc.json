@@ -1,0 +1,10 @@
+{
+	"inputFiles": ["./src", "./lib"],
+	"mode": "file",
+	"out": "./docs",
+	"includeDeclarations": true,
+	"excludeExternals": true,
+	"plugin": [
+		"typedoc-plugin-as-member-of"
+	]
+}

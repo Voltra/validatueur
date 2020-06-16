@@ -1,27 +1,19 @@
-import compile from "string-template/compile";
+import { pope } from "pope/dist/pope";
 import { ValidatorArgs, FormatArgs, Formatter } from "./ValidatorArgs";
 import { Extended } from "./types";
 
+/**
+ * Convert the validato args to a record for the output
+ * @param args - The validator args
+ */
 const recordFromArgs = (args: ValidatorArgs) => {
 	const rec: Record<string, any> = {
 		...args,
 	};
 
 	delete rec.message;
-	defineArrayArgs(args.args, rec);
 
 	return rec;
-};
-
-const defineArrayArg = (payload: Record<string, any>) => (
-	value: string,
-	i: number
-) => {
-	payload[`args${i}`] = value;
-};
-
-const defineArrayArgs = (args: string[], payload: Record<string, any>) => {
-	args.forEach(defineArrayArg(payload));
 };
 
 /**
@@ -29,13 +21,17 @@ const defineArrayArgs = (args: string[], payload: Record<string, any>) => {
  * @param args - The arguments for the validator
  */
 export const precompile = (args: ValidatorArgs): Formatter => {
-	const compiled = compile(args.message);
-
 	const fmtArg = recordFromArgs(args);
 
 	return (obj: Extended<FormatArgs>) =>
-		compiled({
-			...obj,
-			...fmtArg,
-		});
+		pope(
+			args.message,
+			{
+				...obj,
+				...fmtArg,
+			},
+			{
+				skipUndefined: true,
+			}
+		);
 };

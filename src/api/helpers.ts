@@ -1,9 +1,33 @@
-import { Extended, Result, isNone, Optional } from "./types";
+import { Extended, isNone, none, ValidationPromise } from "./types";
 import { ValidatorArgs, FormatArgs } from "./ValidatorArgs";
 import { Error } from "./Error";
 import { precompile } from "./templating";
 import { Sanitizer } from "./Sanitizer";
 import { Validator, ValidatorWrapper } from "./Validator";
+
+export const getFirst = <T, U, A = T, B = U>(
+	root: ValidatorWrapper<T, U>
+): ValidatorWrapper<A, B> => {
+	// backtrack to first rule
+	let first = (root as any) as ValidatorWrapper<A, B>;
+
+	while (!isNone(first.parent))
+		first = (first.parent as any) as ValidatorWrapper<A, B>;
+
+	return first;
+};
+
+export const getLast = <T, U, A = T, B = U>(
+	root: ValidatorWrapper<T, U>
+): ValidatorWrapper<A, B> => {
+	// backtrack to last rule
+	let last = (root as any) as ValidatorWrapper<A, B>;
+
+	while (!isNone(last.child))
+		last = (last.child as any) as ValidatorWrapper<A, B>;
+
+	return last;
+};
 
 /**
  * Create an error object from the validation and formatting arguments
@@ -28,28 +52,31 @@ export const errorFrom = (
  * @param rule - The name of the sanitization rule
  * @param sanitizer - The sanitizer to wrap
  */
-export const sanitizerWrapperGenerator = <T, U>(
+export const sanitizerWrapperGenerator = <T = any, U = T>(
 	rule: string,
 	sanitizer: Sanitizer<T, U>
 ) => {
-	return <V>(
-		parent: Optional<ValidatorWrapper<V, T>> = null,
-		...args: any[]
-	) => ({
-		parent,
+	return (...args: any[]) => ({
+		parent: none,
+		child: none,
 		args,
 		rule,
 		validator(): Validator<T, U> {
 			return {
-				validate(value: T, vargs: ValidatorArgs): Result<U, Error> {
+				async validate(
+					value: T,
+					vargs: ValidatorArgs
+				): ValidationPromise<U, Error> {
 					vargs.args = args; //replace provided arguments with already given arguments
-					const opt = sanitizer.sanitize(value, vargs);
 
-					if (isNone(opt))
-						return errorFrom(vargs, {
+					try {
+						const opt = await sanitizer.sanitize(value, vargs);
+						return opt;
+					} catch (_) {
+						throw errorFrom(vargs, {
 							rule,
 						});
-					else return opt as U;
+					}
 				},
 			};
 		},

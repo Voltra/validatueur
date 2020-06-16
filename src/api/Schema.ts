@@ -1,62 +1,89 @@
-import { ValidatorWrapper } from "./Validator";
-import { Error, isError } from "./Error";
 import { ValidatedSchema } from "./ValidatedSchema";
-import { asSequence } from "sequency";
+import { RuleChain, Rules } from "../rules";
+import { Validatueur } from "./index";
+import { Messages } from "./Messages";
 
 export interface SchemaArgs {
-	rules: Record<string, ValidatorWrapper<any>>;
-	messages: Record<string, string>;
+	rules: Rules;
+	messages: Messages;
+}
+
+export interface SchemaFieldValidationResult<T = any, U = T> {
+	field: string;
+	result: Validatueur.Result<U, Validatueur.Error>;
 }
 
 export class Schema {
-	public static from({ rules, messages }: SchemaArgs) {
+	public static from({
+		rules = {},
+		messages = {},
+	}: Partial<SchemaArgs> = {}) {
 		return new this(rules, messages);
 	}
 
+	public includeExtra = false;
+	public rawData: Validatueur.Values = {};
+
 	protected constructor(
-		protected ruleSet: Record<string, ValidatorWrapper<any>>,
-		protected messages: Record<string, string>
+		public readonly ruleSet: Rules,
+		public readonly messages: Messages
 	) {}
 
-	public validate(values: Record<string, any>): ValidatedSchema {
-		return asSequence(Object.entries(values))
-			.map(([field, value]: [string, any]) => {
-				if (!(field in this.ruleSet))
-					return {
-						field,
-						result: value,
-					};
+	public async __validateField(
+		field: string,
+		value: any
+	): Promise<SchemaFieldValidationResult> {
+		if (!(field in this.ruleSet))
+			return {
+				field,
+				result: value,
+			};
 
-				const wrapper = this.ruleSet[field];
-				const { args, rule } = wrapper;
-				const messageField = `${field}.${rule}`;
-				const message =
-					messageField in this.messages
-						? this.messages[messageField]
-						: "";
+		const result = await this.ruleSet[field].__validate(field, value, this);
 
-				const result = wrapper.validator().validate(value, {
-					args,
-					field,
-					message,
-				});
+		return {
+			field,
+			result,
+		};
+	}
 
-				return {
-					field,
-					result,
-				};
-			})
-			.reduce(
-				(acc: ValidatedSchema, { field, result }) => {
-					if (isError(result)) acc.errors.push(result as Error);
-					else acc.values[field] = result as any;
+	public async validate(
+		values: Validatueur.Values,
+		includeExtra: boolean = false
+	): Validatueur.Promise<ValidatedSchema> {
+		const ret: ValidatedSchema = {
+			errors: [],
+			values: {},
+			valid: false,
+		};
 
-					return acc;
-				},
-				{
-					errors: [],
-					values: {},
+		this.includeExtra = includeExtra;
+		this.rawData = values; //TODO: make a deep copy to avoid unintended mutations
+
+		const errorMap = new Map<string, Validatueur.Error>();
+
+		for (const [field, value] of Object.entries(values)) {
+			if (!(field in this.ruleSet) && !this.includeExtra) continue;
+
+			try {
+				const newValue = await this.__validateField(field, value);
+				ret.values[field] = newValue;
+			} catch (error) {
+				/*if (Array.isArray(error)) ret.errors.push(...error);
+				else ret.errors.push(error);*/
+				if (Array.isArray(error)) {
+					error.forEach((e: Validatueur.Error) => {
+						if (!errorMap.has(e.field)) errorMap.set(e.field, e);
+					});
+				} else if (!errorMap.has(error.field)) {
+					errorMap.set(error.field, error);
 				}
-			);
+			}
+		}
+
+		ret.errors = [...errorMap.values()];
+		ret.valid = ret.errors.length <= 0;
+		this.rawData = {}; // reset the raw data to avoid further modifications/access
+		return ret;
 	}
 }

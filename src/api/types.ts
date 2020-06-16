@@ -1,7 +1,9 @@
 /**
  * A type that represents an empty value
  */
-export type None = null | undefined;
+export type None = /* null | */ undefined;
+
+export const none = undefined;
 
 /**
  * A type that represents a value that might be there
@@ -16,8 +18,20 @@ export type Result<T, E> = T | E;
 /**
  * A type that is either a value type or a value type with additional properties
  */
-export type Extended<T> = T | (T & { [key: string]: any });
+export type Extended<T> = T & { [key: string]: any };
 
 export const isNone = <T>(opt: Optional<T>) => {
-	return opt === null || opt === undefined;
+	return opt === none;
+};
+
+export type ValidationPromise<T = any, E = any> = Promise<T>;
+export const ValidationPromise = Promise; // ts 1055, this is completely retarded, typescript fix this
+
+export const noneIf = async <T>(
+	condition: boolean,
+	value: T
+): ValidationPromise<T, None> => {
+	if (condition) return value;
+
+	throw none;
 };

@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 
 /**
@@ -9,24 +10,35 @@ const here = (uri = "") => path.resolve(__dirname, uri);
 
 module.exports = {
 	mode: "production",
-	entry: "./src/index.ts",
+	entry: here("./src/index.ts"),
 	devtool: "source-map",
+	plugins: [
+		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // avoid bundling momentjs locales
+	],
 	module: {
 		rules: [
 			{
-				test: /\.tsx?$/i,
+				test: /(?!\.d)\.tsx?$/i,
 				use: "ts-loader",
-				include: here("src"),
-				exclude: here("node_modules"),
+				include: here("src/"),
+				exclude: [
+					"node_modules/",
+					"test/"
+				].map(here),
+			},
+			{
+				test: /\.d\.tsx?$/i,
+				use: "null-loader",
+				include: here("src/"),
+				exclude: [
+					"node_modules/",
+					"test/"
+				].map(here),
 			},
 		],
 	},
 	resolve: {
-		extensions: [
-			"ts",
-			"js",
-			"tsx",
-		].map(ext => `.${ext}`),
+		extensions: ["ts", "js", "tsx"].map(ext => `.${ext}`),
 	},
 	output: {
 		filename: "index.js",
