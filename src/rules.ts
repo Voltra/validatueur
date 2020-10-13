@@ -10,13 +10,16 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 		rule: "",
 		validator(): Validatueur.Validator<T> {
 			return {
+				shouldValidate<T>(value: T, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+					return true;
+				},
 				validate(
 					value: T,
 					_vargs: Validatueur.ValidatorArgs,
 					_schema: Validatueur.Schema
 				): Validatueur.Promise<T, Validatueur.Error> {
 					return Promise.resolve(value);
-				},
+				}
 			};
 		},
 	};
