@@ -19,6 +19,7 @@ export class SameAs<T = any> extends AbstractValidator<T, any> {
 			otherField,
 			schema.rawData[otherField]
 		);
+
 		const { result: thisResult } = await schema.__validateField(
 			otherField,
 			value

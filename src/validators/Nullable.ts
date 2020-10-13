@@ -10,6 +10,10 @@ export class Nullable<T = any> extends AbstractValidator<T | null> {
 		return "nullable";
 	}
 
+	public shouldValidate(value: T | null, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+		return true; // always validate as it converts to null if it doesn't have any value
+	}
+
 	protected __validate(
 		field: string,
 		value: T | null,

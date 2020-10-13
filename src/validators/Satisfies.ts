@@ -6,6 +6,7 @@ export class Satisfies<T = any> extends AbstractValidator<T> {
 	public get rule(): string {
 		return "satisfies";
 	}
+
 	protected __validate(
 		field: string,
 		value: T,

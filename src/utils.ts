@@ -61,7 +61,7 @@ const ipv4: RegExp = (() => {
 	const re = generateSequence(() => part)
 		.take(4)
 		.joinToString({
-			separator: ".",
+			separator: "\\.", // literal dot, in re "\." but it's a string so double escape
 			prefix: "^",
 			postfix: "$",
 		});

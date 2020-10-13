@@ -1,15 +1,23 @@
 import { Validatueur } from "../api";
 import { errorFrom } from "../api/helpers";
 import { extendRules } from "../rules";
+import { isValue } from "../utils";
 
 export abstract class AbstractValidator<T = any, U = T>
 	implements Validatueur.Validator<T, U> {
+	public shouldValidate(value: T, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+		return isValue(value);
+	}
+
 	public async validate(
 		value: T,
 		args: Validatueur.ValidatorArgs,
 		schema: Validatueur.Schema
 	): Validatueur.Promise<U, Validatueur.Error> {
 		try {
+			if(!this.shouldValidate(value, args, schema))
+				return value as any as U; // if not required, delegate to other validators
+
 			const ret = await this.__validate(
 				args.field,
 				value,

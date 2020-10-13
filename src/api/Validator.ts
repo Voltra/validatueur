@@ -4,6 +4,8 @@ import { ValidatorArgs } from "./ValidatorArgs";
 import { Schema } from "./Schema";
 
 export interface Validator<T = any, U = T> {
+	shouldValidate(value: T, args: ValidatorArgs, schema: Schema): boolean;
+
 	validate(
 		value: T,
 		args: ValidatorArgs,

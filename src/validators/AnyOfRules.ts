@@ -6,6 +6,7 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 	public get rule(): string {
 		return "anyOfRules";
 	}
+
 	protected async __validate(
 		field: string,
 		value: T,
@@ -17,7 +18,7 @@ export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
 				const ret = await chain.__validate(field, value, schema);
 				return ret;
 			} catch (_) {
-				continue;
+				// continue;
 			}
 		}
 

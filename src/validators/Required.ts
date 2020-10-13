@@ -14,4 +14,8 @@ export class Required<T = any> extends AbstractValidator<T> {
 	): Validatueur.Promise<T> {
 		return Validatueur.noneIf(!isValue(value), value);
 	}
+
+	public shouldValidate(value: T, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+		return true;
+	}
 }

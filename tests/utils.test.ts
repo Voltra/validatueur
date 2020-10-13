@@ -331,7 +331,7 @@ describe("RegularExpressions", function () {
 	describe(".ipv4", function () {
 		const re = RegularExpressions.ipv4;
 
-		it("matches valid IPv4 addresses", function () {
+		it("matches every valid IPv4 addresses", function () {
 			const gen = () => range(0, 255);
 			gen()
 				.zip(gen())
@@ -339,6 +339,13 @@ describe("RegularExpressions", function () {
 				.zip(gen())
 				.map(([[[a, b], c], d]) => `${a}.${b}.${c}.${d}`)
 				.forEach(ip => expect(re.test(ip)).toBeTruthy());
+		});
+
+		it("fails on invalid IPv4 addresses", function(){
+			[
+				"256.0.0.1",
+				"127a0a0a1",
+			].forEach(ip => expect(re.test(ip)).toBeFalsy());
 		});
 	});
 });
