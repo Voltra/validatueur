@@ -4,6 +4,8 @@ import { Error } from "./Error";
 import { precompile } from "./templating";
 import { Sanitizer } from "./Sanitizer";
 import { Validator, ValidatorWrapper } from "./Validator";
+import {isValue} from "@/utils";
+import {Schema} from "@/api/Schema";
 
 export const getFirst = <T, U, A = T, B = U>(
 	root: ValidatorWrapper<T, U>
@@ -78,6 +80,9 @@ export const sanitizerWrapperGenerator = <T = any, U = T>(
 						});
 					}
 				},
+				shouldValidate(value: T, args: ValidatorArgs, schema: Schema): boolean {
+					return isValue(value);
+				}
 			};
 		},
 	});
