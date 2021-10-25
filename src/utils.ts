@@ -21,7 +21,7 @@ export const isValue = <T>(value: T) => {
 
 export const trim = <T>(value: T) => asStr(value).trim();
 
-export const contains = <T>(values: any[], value: T) =>
+export const contains = <T>(values: T[], value: T) =>
 	values.some(v => v === value);
 
 export const asNumber = <T>(value: T) => {
@@ -36,7 +36,7 @@ export const asNumber = <T>(value: T) => {
 	return integer === float ? integer : float;
 };
 
-export const asDate = <T = any>(
+export const asDate = <T = unknown>(
 	value?: T,
 	format?:
 		| string
@@ -49,7 +49,7 @@ export const asDate = <T = any>(
 };
 
 export const now = (): ReturnType<typeof asDate> => {
-	return asDate(undefined);
+	return asDate();
 };
 
 const ipv4: RegExp = (() => {

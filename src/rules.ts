@@ -3,20 +3,26 @@ import { isNone } from "./api/types";
 import { getFirst, getLast } from "./api/helpers";
 
 const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
+	const { none } = Validatueur;
+
 	return {
-		parent: Validatueur.none,
-		child: Validatueur.none,
+		parent: none,
+		child: none,
 		args: [],
 		rule: "",
 		validator(): Validatueur.Validator<T> {
 			return {
-				shouldValidate<T>(value: T, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+				shouldValidate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
+					value: T,
+					args: Validatueur.ValidatorArgs<K>,
+					schema: Validatueur.Schema<Keys, Values>
+				): boolean {
 					return true;
 				},
-				validate(
+				validate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
 					value: T,
-					_vargs: Validatueur.ValidatorArgs,
-					_schema: Validatueur.Schema
+					_vargs: Validatueur.ValidatorArgs<K>,
+					_schema: Validatueur.Schema<Keys, Values>
 				): Validatueur.Promise<T, Validatueur.Error> {
 					return Promise.resolve(value);
 				}
@@ -25,32 +31,33 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 	};
 };
 
-export class RuleChain<T = any, U = T>
-	implements Validatueur.Extended<RuleChain<T, U>> {
+export class RuleChain<T = unknown, U = T> {
 	public constructor(protected root: Validatueur.ValidatorWrapper<T, U>) {}
 
-	public __getFirst<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
-		return getFirst<T, U, A, B>(this.root);
+	public __getFirst<B = U>(): Validatueur.ValidatorWrapper<T, B> {
+		return getFirst<T, U, B>(this.root);
 	}
 
-	public __getLast<A = T, B = U>(): Validatueur.ValidatorWrapper<A, B> {
-		return getLast<T, U, A, B>(this.root);
+	public __getLast<A = T>(): Validatueur.ValidatorWrapper<A, U> {
+		return getLast<T, U, A>(this.root);
 	}
 
-	public async __validate(
-		field: string,
+	public async __validate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
+		field: K,
 		value: T,
-		schema: Validatueur.Schema
-	): Validatueur.Promise<any, Validatueur.Error> {
-		let currentValue: any = value;
-		let root: Validatueur.Optional<Validatueur.ValidatorWrapper<
-			any,
-			any
-		>> = this.__getFirst();
+		schema: Validatueur.Schema<Keys, Values>
+	): Validatueur.Promise<U, Validatueur.Error<K>> {
+		let currentValue: unknown|U = value;
+		let root = this.__getFirst() as Validatueur.Optional<
+			Validatueur.ValidatorWrapper<
+				unknown,
+				unknown
+			>
+		>;
 
 		while (!isNone(root)) {
 			// iterate through rules
-			const wrapper = root as Validatueur.ValidatorWrapper<any, any>;
+			const wrapper = root;
 
 			const { args, rule } = wrapper;
 			const messageField = `${field}.${rule}`;
@@ -69,54 +76,62 @@ export class RuleChain<T = any, U = T>
 				schema
 			);
 
-			currentValue = result as any;
+			currentValue = result as unknown;
 			root = wrapper.child;
 		}
 
-		return currentValue;
+		return currentValue as U;
 	}
 }
 
-export const ruleExists = (name: string) => name in RuleChain.prototype;
+export const ruleExists = (name: string) => {
+	return name in RuleChain.prototype
+		&& typeof RuleChain.prototype[name] === "function";
+};
 
-export type RuleExtension<T = any, U = T> = (
+/**
+ * A rule extension is a rule that adds validation through the uses of other rules by binding or wrapping parameters
+ */
+export type RuleExtension<T = unknown, U = T, B = unknown> = (
 	this: RuleChain<T, U>,
 	...args: any[]
-) => Validatueur.Extended<RuleChain<T, U>>;
+) => RuleChain<U, B>;
 
-export const registerExtensionRule = <T, U>(
+export const registerExtensionRule = <T = unknown, U = T, B = unknown>(
 	name: string,
-	fn: RuleExtension<T, U>
+	fn: RuleExtension<T, U, B>
 ) => {
 	if (ruleExists(name))
 		throw new ReferenceError(`Tried to redefine rule "${name}"`);
 
 	RuleChain.prototype[name] = function (
 		this: RuleChain<T, U>,
-		...args: any[]
-	): Validatueur.Extended<RuleChain<T, U>> {
+		...args: unknown[]
+	): RuleChain<U, B> {
 		const child = fn.call(this, ...args);
-		this.__getLast().child = child.__getFirst();
-		child.__getFirst().parent = this.__getLast();
+		const childFirst = child.__getFirst();
+		const thisLast = this.__getLast();
+		thisLast.child = childFirst;
+		childFirst.parent = thisLast;
 		return child;
 	};
 };
 
-export const extendRules = <T = any, U = T>(
+export const extendRules = <A = unknown, T = A, U = unknown>(
 	name: string,
-	fn: (...args: any[]) => Validatueur.ValidatorWrapper<T, U>
+	fn: (this: RuleChain<A, T>, ...args: unknown[]) => Validatueur.ValidatorWrapper<T, U>
 ) => {
 	return registerExtensionRule(name, function (
-		this: RuleChain<T, U>,
-		...args: any[]
+		this: RuleChain<A, T>,
+		...args: unknown[]
 	) {
-		const wrapper = fn(...args);
+		const wrapper = fn.call(this, ...args);
 		return new RuleChain<T, U>(wrapper);
 	});
 };
 
-export const rules = <T = any>(): Validatueur.Extended<RuleChain<T>> => {
-	return new RuleChain<T>(noop<T>());
+export const rules = <T = unknown>(): RuleChain<T> => {
+	return new RuleChain(noop<T>());
 };
 
-export type Rules = Record<string, RuleChain>;
+export type Rules<Keys extends string = string> = Record<Keys, RuleChain>;

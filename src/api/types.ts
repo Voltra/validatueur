@@ -20,11 +20,11 @@ export type Result<T, E> = T | E;
  */
 export type Extended<T> = T & { [key: string]: any };
 
-export const isNone = <T>(opt: Optional<T>) => {
+export const isNone = <T>(opt: Optional<T>): opt is None => {
 	return opt === none;
 };
 
-export type ValidationPromise<T = any, E = any> = Promise<T>;
+export type ValidationPromise<T = unknown, E = unknown> = Promise<T>;
 export const ValidationPromise = Promise; // ts 1055, this is completely retarded, typescript fix this
 
 export const noneIf = async <T>(

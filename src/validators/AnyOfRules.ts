@@ -2,7 +2,7 @@ import { Validatueur } from "../api";
 import { RuleChain } from "../rules";
 import { AbstractValidator } from "./AbstractValidator";
 
-export class AnyOfRules<T = any, U = T> extends AbstractValidator<T, U> {
+export class AnyOfRules<T = unknown, U = unknown> extends AbstractValidator<T, U> {
 	public get rule(): string {
 		return "anyOfRules";
 	}

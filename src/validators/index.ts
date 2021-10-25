@@ -55,7 +55,7 @@ Ex:
 		),
 	}
 */
-registerValidator(new Nullable<any>());
+registerValidator(new Nullable());
 
 // required()
 /*
@@ -147,8 +147,8 @@ Ex:
 		mod2: rules().doesNotSatisfy(x => x%2),
 	}
 */
-registerExtensionRule("doesNotSatisfy", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("doesNotSatisfy", function <T = unknown>(
+	this: RuleChain<T>,
 	predicate: (value: T) => boolean
 ) {
 	return this.satisfies((value: T) => !predicate(value));
@@ -161,9 +161,9 @@ Ex:
 		amount: rules().oneOf([1, 2, 4, 10, 100]),
 	}
 */
-registerExtensionRule("oneOf", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	values: any[]
+registerExtensionRule("oneOf", function <T = unknown>(
+	this: RuleChain<T>,
+	values: T[]
 ) {
 	return this.satisfies((value: T) => contains(values, value));
 });
@@ -175,53 +175,53 @@ Ex:
 		name: rules().identifier().notIn(reservedKeywords),
 	}
 */
-registerExtensionRule("notIn", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	values: any[]
+registerExtensionRule("notIn", function <T = unknown>(
+	this: RuleChain<T>,
+	values: T[]
 ) {
 	return this.satisfies((value: T) => !contains(values, value));
 });
 
-registerExtensionRule("is", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	expected: any
+registerExtensionRule("is", function <T = unknown>(
+	this: RuleChain<T>,
+	expected: T
 ) {
 	return this.satisfies((value: T) => value === expected);
 });
 
-registerExtensionRule("isNot", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	expected: any
+registerExtensionRule("isNot", function <T = unknown>(
+	this: RuleChain<T>,
+	expected: unknown
 ) {
 	return this.satisfies((value: T) => value !== expected);
 });
 
-registerExtensionRule("lessThan", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	max: any
+registerExtensionRule("lessThan", function(
+	this: RuleChain<number>,
+	max: number
 ) {
-	return this.satisfies((value: T) => value < max);
+	return this.satisfies((value: number) => value < max);
 });
 
-registerExtensionRule("lessThanOrEqualTo", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	max: any
+registerExtensionRule("lessThanOrEqualTo", function(
+	this: RuleChain<number>,
+	max: number
 ) {
-	return this.satisfies((value: T) => value <= max);
+	return this.satisfies((value: number) => value <= max);
 });
 
-registerExtensionRule("greaterThan", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	min: any
+registerExtensionRule("greaterThan", function (
+	this: RuleChain<number>,
+	min: number
 ) {
-	return this.satisfies((value: T) => value > min);
+	return this.satisfies((value: number) => value > min);
 });
 
-registerExtensionRule("greaterThanOrEqualTo", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
-	min: any
+registerExtensionRule("greaterThanOrEqualTo", function (
+	this: RuleChain<number>,
+	min: number
 ) {
-	return this.satisfies((value: T) => value >= min);
+	return this.satisfies((value: number) => value >= min);
 });
 
 /****************************************************************************\
@@ -234,15 +234,14 @@ Ex:
 		amount: rules().max(maxPerBuy, false)
 	}
 */
-registerExtensionRule("max", function <T = number, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("max", function (
+	this: RuleChain<number>,
 	max: number,
 	{ exclusive = true, step = undefined }: MinMaxArgs
 ) {
-	return this.satisfies((value: T) => {
-		const nb = asNumber(value);
-		const modCheck = isNone(step) ? true : !((max - nb) % <number>step);
-		return modCheck && (exclusive ? nb < max : nb <= max);
+	return this.satisfies((value: number) => {
+		const modCheck = isNone(step) ? true : !((max - value) % step);
+		return modCheck && (exclusive ? value < max : value <= max);
 	});
 });
 
@@ -253,16 +252,15 @@ Ex:
 		amount: rules().min(minPerBuy)
 	}
 */
-registerExtensionRule("min", function <T = number, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("min", function(
+	this: RuleChain<number>,
 	min: number,
 	{ exclusive = false, step = undefined }: MinMaxArgs
 ) {
 	//TODO: Double check in tests if steps & exclusion semantics work properly
-	return this.satisfies((value: T) => {
-		const nb = asNumber(value);
-		const modCheck = isNone(step) ? true : !((nb - min) % <number>step);
-		return modCheck && (exclusive ? nb > min : nb >= min);
+	return this.satisfies((value: number) => {
+		const modCheck = isNone(step) ? true : !((value - min) % step);
+		return modCheck && (exclusive ? value > min : value >= min);
 	});
 });
 
@@ -284,8 +282,8 @@ Ex:
 		})
 	}
 */
-registerExtensionRule("between", function <T = number, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("between", function(
+	this: RuleChain<number>,
 	{
 		start,
 		end = undefined,
@@ -327,8 +325,8 @@ Ex:
 		}]),
 	}
  */
-registerExtensionRule("withinAnyRange", function <T = number, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("withinAnyRange", function(
+	this: RuleChain<number>,
 	ranges: BetweenArgs[]
 ) {
 	return this.anyOfRules(
@@ -345,8 +343,8 @@ registerValidator(new NotNaN<number>());
  * Strings
 \****************************************************************************/
 // maxLength(n, exclusive=true)
-registerExtensionRule("maxLength", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("maxLength", function <T extends number = number, U extends T = T>(
+	this: RuleChain<T, U>,
 	max: number,
 	exclusive: boolean = true
 ) {
@@ -357,8 +355,8 @@ registerExtensionRule("maxLength", function <T = string, U = T>(
 });
 
 // minLength(n, exclusive=false)
-registerExtensionRule("minLength", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("minLength", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	min: number,
 	exclusive: boolean = false
 ) {
@@ -382,8 +380,8 @@ Ex:
 		username: rules().lengthBetween({start: 6, end: 25}),
 	}
 */
-registerExtensionRule("lengthBetween", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("lengthBetween", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	{
 		start,
 		end,
@@ -411,8 +409,8 @@ Ex:
 		}]),
 	}
 */
-registerExtensionRule("lengthInAnyRange", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("lengthInAnyRange", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	ranges: BetweenArgs[]
 ) {
 	return this.anyOfRules(
@@ -423,8 +421,8 @@ registerExtensionRule("lengthInAnyRange", function <T = string, U = T>(
 });
 
 // regex(pattern, fullMatch=true)
-registerExtensionRule("regex", function <T = any, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("regex", function <T = unknown, U = unknown>(
+	this: RuleChain<T, U>,
 	pattern: RegExp,
 	fullMatch: boolean = true
 ) {
@@ -445,8 +443,8 @@ export const registerRegexRule = (
 	patternFactory: () => RegExp,
 	fullMatch: boolean = false
 ) => {
-	registerExtensionRule(name, function <T = string, U = T>(
-		this: Validatueur.Extended<RuleChain<T, U>>
+	registerExtensionRule(name, function <T = string, U = unknown>(
+		this: RuleChain<T, U>
 	) {
 		return this.regex(patternFactory(), fullMatch);
 	});
@@ -482,8 +480,8 @@ registerRegexRule(
 		useMax=true,
 	})
 */
-registerExtensionRule("password", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("password", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	{
 		min = 8,
 		max = 100,
@@ -502,8 +500,8 @@ registerExtensionRule("password", function <T = string, U = T>(
 });
 
 // startsWith(prefix)
-registerExtensionRule("startsWith", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("startsWith", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	start: string
 ): RuleChain<T, U> {
 	return this.satisfies((value: T) => {
@@ -513,8 +511,8 @@ registerExtensionRule("startsWith", function <T = string, U = T>(
 });
 
 // doesNotStartWith(prefix)
-registerExtensionRule("doesNotStartWith", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("doesNotStartWith", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	start: string
 ): RuleChain<T, U> {
 	return this.satisfies((value: T) => {
@@ -524,8 +522,8 @@ registerExtensionRule("doesNotStartWith", function <T = string, U = T>(
 });
 
 // endsWith(suffix)
-registerExtensionRule("endsWith", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("endsWith", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	end: string
 ) {
 	return this.satisfies((value: T) => {
@@ -535,8 +533,8 @@ registerExtensionRule("endsWith", function <T = string, U = T>(
 });
 
 // doesNotEndWith(suffix)
-registerExtensionRule("doesNotEndWith", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("doesNotEndWith", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	end: string
 ) {
 	return this.satisfies((value: T) => {
@@ -546,8 +544,8 @@ registerExtensionRule("doesNotEndWith", function <T = string, U = T>(
 });
 
 // contains(needle)
-registerExtensionRule("contains", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("contains", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	substr: string
 ) {
 	return this.satisfies((value: T) => {
@@ -557,8 +555,8 @@ registerExtensionRule("contains", function <T = string, U = T>(
 });
 
 // doesNotContain(needle)
-registerExtensionRule("doesNotContain", function <T = string, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("doesNotContain", function <T = string, U = unknown>(
+	this: RuleChain<T, U>,
 	substr: string
 ) {
 	return this.satisfies((value: T) => {
@@ -570,8 +568,8 @@ registerExtensionRule("doesNotContain", function <T = string, U = T>(
 /****************************************************************************\
  * Dates
 \****************************************************************************/
-registerExtensionRule("after", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("after", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	min: any,
 	format?: string
 ) {
@@ -581,8 +579,8 @@ registerExtensionRule("after", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("before", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("before", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	min: any,
 	format?: string
 ) {
@@ -592,8 +590,8 @@ registerExtensionRule("before", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("sameOrAfter", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("sameOrAfter", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	min: any,
 	format?: string
 ) {
@@ -603,8 +601,8 @@ registerExtensionRule("sameOrAfter", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("sameOrBefore", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("sameOrBefore", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	min: any,
 	format?: string
 ) {
@@ -614,8 +612,8 @@ registerExtensionRule("sameOrBefore", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("dateBetween", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("dateBetween", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	min: any,
 	max: any,
 	{ startExcluded = false, endExcluded = true, unit = undefined } = {},
@@ -640,8 +638,8 @@ registerExtensionRule("dateBetween", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("onLeapYear", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("onLeapYear", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	format?: string
 ) {
 	return this.satisifes((value: T) => {
@@ -649,8 +647,8 @@ registerExtensionRule("onLeapYear", function <T = Date, U = T>(
 	});
 });
 
-registerExtensionRule("beforeOffsetOf", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("beforeOffsetOf", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	amount?: moment.DurationInputArg1,
 	unit?: moment.DurationInputArg2,
 	format?: string
@@ -660,8 +658,8 @@ registerExtensionRule("beforeOffsetOf", function <T = Date, U = T>(
 	return this.dateBetween(now_, max, {}, format);
 });
 
-registerExtensionRule("afterOffsetOf", function <T = Date, U = T>(
-	this: Validatueur.Extended<RuleChain<T, U>>,
+registerExtensionRule("afterOffsetOf", function <T = Date, U = unknown>(
+	this: RuleChain<T, U>,
 	amount?: moment.DurationInputArg1,
 	unit?: moment.DurationInputArg2,
 	format?: string

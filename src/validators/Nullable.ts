@@ -5,7 +5,7 @@ import { RuleChain } from "../rules";
 
 //TODO: Move to sanitizers
 
-export class Nullable<T = any> extends AbstractValidator<T | null> {
+export class Nullable<T = unknown> extends AbstractValidator<T | null> {
 	public get rule(): string {
 		return "nullable";
 	}

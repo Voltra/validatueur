@@ -2,7 +2,7 @@ import { AbstractValidator } from "./AbstractValidator";
 import { noneIf } from "../api/types";
 import { Validatueur } from "../api";
 
-export class Satisfies<T = any> extends AbstractValidator<T> {
+export class Satisfies<T = unknown> extends AbstractValidator<T> {
 	public get rule(): string {
 		return "satisfies";
 	}

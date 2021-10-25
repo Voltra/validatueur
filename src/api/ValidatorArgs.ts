@@ -1,6 +1,6 @@
-export interface ValidatorArgs {
-	args: any[];
-	field: string;
+export interface ValidatorArgs<Key extends string = string> {
+	args: unknown[];
+	field: Key;
 	message: string;
 }
 

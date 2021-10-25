@@ -111,7 +111,7 @@ describe("trim", function () {
 describe("contains", function () {
 	it("finds the value if there", function () {
 		[[[2], 2]].forEach(([arr, value]) =>
-			expect(contains(<any[]>arr, value)).toBeTruthy()
+			expect(contains(<unknown[]>arr, value)).toBeTruthy()
 		);
 	});
 
@@ -141,13 +141,13 @@ describe("contains", function () {
 			[[[""]], 0],
 			[[0], [""]],
 		].forEach(([arr, value]) =>
-			expect(contains(<any[]>arr, value)).toBeFalsy()
+			expect(contains(<unknown[]>arr, value)).toBeFalsy()
 		);
 	});
 
 	it("does not find the value if not present", function () {
 		[[[], true]].forEach(([arr, value]) =>
-			expect(contains(<any[]>arr, value)).toBeFalsy()
+			expect(contains(<unknown[]>arr, value)).toBeFalsy()
 		);
 	});
 });
@@ -198,7 +198,7 @@ describe("asDate", function () {
 		[
 			[Date.now(), undefined],
 			// [Date(), moment.RFC_2822], // no longer supported
-		].forEach(([date, fmt]: any[]) => {
+		].forEach(([date, fmt]: unknown[]) => {
 			const mdate = asDate(date, fmt);
 			expect(mdate.isValid()).toBeTruthy();
 			expect(mdate.toDate()).toStrictEqual(new Date(date));

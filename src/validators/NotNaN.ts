@@ -12,7 +12,7 @@ export class NotNaN<T = number> extends AbstractValidator<T, number> {
 		field: string,
 		value: T,
 		schema: Validatueur.Schema,
-		...args: any[]
+		...args: unknown[]
 	): Validatueur.Promise<number> {
 		const nb = asNumber(value);
 		return Validatueur.noneIf(Sanitizers.__isNaN(nb), nb);

@@ -46,6 +46,7 @@
 		"webpack-progress-bar": "^1.2.1"
 	},
 	"dependencies": {
+		"deepcopy": "^2.1.0",
 		"moment": "^2.29.1",
 		"pope": "^2.0.2",
 		"sequency": "^0.19.2"

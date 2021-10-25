@@ -3,7 +3,7 @@ import { Validatueur } from "../api";
 import noneIf = Validatueur.noneIf;
 import { isError } from "../api/Error";
 
-export class SameAs<T = any> extends AbstractValidator<T, any> {
+export class SameAs<T = unknown> extends AbstractValidator<T, any> {
 	public get rule(): string {
 		return "sameAs";
 	}

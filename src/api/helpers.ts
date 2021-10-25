@@ -7,28 +7,28 @@ import { Validator, ValidatorWrapper } from "./Validator";
 import {isValue} from "@/utils";
 import {Schema} from "@/api/Schema";
 
-export const getFirst = <T, U, A = T, B = U>(
+export const getFirst = <T, U, B = U>(
 	root: ValidatorWrapper<T, U>
-): ValidatorWrapper<A, B> => {
+): ValidatorWrapper<T, B> => {
 	// backtrack to first rule
-	let first = (root as any) as ValidatorWrapper<A, B>;
+	let first = root as ValidatorWrapper<unknown, unknown>;
 
 	while (!isNone(first.parent))
-		first = (first.parent as any) as ValidatorWrapper<A, B>;
+		first = first.parent as ValidatorWrapper<unknown, unknown>;
 
-	return first;
+	return first as ValidatorWrapper<T, B>;
 };
 
-export const getLast = <T, U, A = T, B = U>(
+export const getLast = <T, U, A = T>(
 	root: ValidatorWrapper<T, U>
-): ValidatorWrapper<A, B> => {
+): ValidatorWrapper<A, U> => {
 	// backtrack to last rule
-	let last = (root as any) as ValidatorWrapper<A, B>;
+	let last = root as ValidatorWrapper<unknown, unknown>;
 
 	while (!isNone(last.child))
-		last = (last.child as any) as ValidatorWrapper<A, B>;
+		last = last.child as ValidatorWrapper<unknown, unknown>;
 
-	return last;
+	return last as ValidatorWrapper<A, U>;
 };
 
 /**
@@ -54,11 +54,11 @@ export const errorFrom = (
  * @param rule - The name of the sanitization rule
  * @param sanitizer - The sanitizer to wrap
  */
-export const sanitizerWrapperGenerator = <T = any, U = T>(
+export const sanitizerWrapperGenerator = <T = unknown, U = unknown>(
 	rule: string,
 	sanitizer: Sanitizer<T, U>
 ) => {
-	return (...args: any[]) => ({
+	return (...args: unknown[]) => ({
 		parent: none,
 		child: none,
 		args,

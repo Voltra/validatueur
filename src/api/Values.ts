@@ -1,1 +1,1 @@
-export type Values = Record<string, any>;
+export type Values<Keys extends string = string, Values = unknown> = Record<Keys, Values>;

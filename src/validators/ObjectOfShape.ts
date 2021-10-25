@@ -2,7 +2,7 @@ import { AbstractValidator } from "./AbstractValidator";
 import { noneIf } from "../api/types";
 import { Validatueur } from "../api";
 
-export class ObjectOfShape<T = any> extends AbstractValidator<
+export class ObjectOfShape<T = unknown> extends AbstractValidator<
 	T,
 	Record<string, any>
 > {
