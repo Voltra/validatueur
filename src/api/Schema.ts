@@ -3,9 +3,10 @@ import { RuleChain, Rules } from "../rules";
 import { Validatueur } from "./index";
 import { Messages } from "./Messages";
 import { isError } from "./Error";
+import deepcopy from "deepcopy"
 
-export interface SchemaArgs<Keys extends string = string> {
-	rules: Rules<Keys>;
+export interface SchemaArgs<Keys extends string = string, Values = unknown> {
+	rules: Rules<Keys, Values>;
 	messages: Messages<Keys>;
 }
 
@@ -16,17 +17,17 @@ export interface SchemaFieldValidationResult<T = unknown, U = T, Key extends str
 
 export class Schema<Keys extends string = string, Values = unknown> {
 	public static from<K extends string = string, V = unknown>({
-		rules = {} as Rules<K>,
+		rules = {} as Rules<K, V>,
 		messages = {} as Messages<K>,
-	}: Partial<SchemaArgs<K>> = {}): Schema<K, V> {
-		return new this(rules, messages);
+	}: Partial<SchemaArgs<K, V>> = {}): Schema<K, V> {
+		return new this<K, V>(rules, messages);
 	}
 
 	public includeExtra = false;
 	public rawData = {} as Validatueur.Values<Keys, Values>;
 
 	protected constructor(
-		public readonly ruleSet: Rules<Keys>,
+		public readonly ruleSet: Rules<Keys, Values>,
 		public readonly messages: Messages<Keys>
 	) {}
 
@@ -40,8 +41,8 @@ export class Schema<Keys extends string = string, Values = unknown> {
 				result: value,
 			};
 
-		const ruleChain = this.ruleSet[field];
-		const result = (await ruleChain.__validate<Keys, Key, Values>(field, value, this)) as U;
+		const ruleChain = this.ruleSet[field] as RuleChain<unknown, U|Values>;
+		const result = (await ruleChain.__validate<Keys, Key, U|Values>(field, value, this)) as U;
 
 		return {
 			field,
@@ -60,7 +61,7 @@ export class Schema<Keys extends string = string, Values = unknown> {
 		};
 
 		this.includeExtra = includeExtra;
-		this.rawData = values; //TODO: make a deep copy to avoid unintended mutations
+		this.rawData = deepcopy(values);
 
 		const errorMap = new Map<Keys, Validatueur.Error<Keys>>();
 		const entries = Object.entries(values) as ([Keys, Values])[];
@@ -71,7 +72,7 @@ export class Schema<Keys extends string = string, Values = unknown> {
 			try {
 				const { result } = await this.__validateField<Values, Values, Keys>(field, value);
 				ret.values[field] = result as Values;
-			} catch (error) {
+			} catch (error: unknown) {
 				if (Array.isArray(error)) {
 					error.forEach((e: Validatueur.Error<Keys>) => {
 						if (!errorMap.has(e.field)) errorMap.set(e.field, e);

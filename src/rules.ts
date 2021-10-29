@@ -12,18 +12,18 @@ const noop = <T>(): Validatueur.ValidatorWrapper<T> => {
 		rule: "",
 		validator(): Validatueur.Validator<T> {
 			return {
-				shouldValidate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
+				shouldValidate<Keys extends string = string, Key extends Keys = Keys, Values = unknown>(
 					value: T,
-					args: Validatueur.ValidatorArgs<K>,
+					args: Validatueur.ValidatorArgs<Key>,
 					schema: Validatueur.Schema<Keys, Values>
 				): boolean {
 					return true;
 				},
-				validate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
+				validate<Keys extends string = string, Key extends Keys = Keys, Values = unknown>(
 					value: T,
-					_vargs: Validatueur.ValidatorArgs<K>,
+					_vargs: Validatueur.ValidatorArgs<Key>,
 					_schema: Validatueur.Schema<Keys, Values>
-				): Validatueur.Promise<T, Validatueur.Error> {
+				): Validatueur.Promise<T, Validatueur.Error<Key>> {
 					return Promise.resolve(value);
 				}
 			};
@@ -42,12 +42,12 @@ export class RuleChain<T = unknown, U = T> {
 		return getLast<T, U, A>(this.root);
 	}
 
-	public async __validate<Keys extends string = string, K extends Keys = Keys, Values = unknown>(
-		field: K,
+	public async __validate<Keys extends string = string, Key extends Keys = Keys, Values = unknown>(
+		field: Key,
 		value: T,
 		schema: Validatueur.Schema<Keys, Values>
-	): Validatueur.Promise<U, Validatueur.Error<K>> {
-		let currentValue: unknown|U = value;
+	): Validatueur.Promise<U, Validatueur.Error<Key>> {
+		let currentValue: unknown|T|U = value;
 		let root = this.__getFirst() as Validatueur.Optional<
 			Validatueur.ValidatorWrapper<
 				unknown,
@@ -134,4 +134,4 @@ export const rules = <T = unknown>(): RuleChain<T> => {
 	return new RuleChain(noop<T>());
 };
 
-export type Rules<Keys extends string = string> = Record<Keys, RuleChain>;
+export type Rules<Keys extends string = string, Values = unknown> = Record<Keys, RuleChain<unknown, Values>>;

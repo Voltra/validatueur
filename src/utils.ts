@@ -36,12 +36,9 @@ export const asNumber = <T>(value: T) => {
 	return integer === float ? integer : float;
 };
 
-export const asDate = <T = unknown>(
-	value?: T,
-	format?:
-		| string
-		| moment.MomentBuiltinFormat
-		| moment.MomentFormatSpecification
+export const asDate = (
+	value?: moment.MomentInput,
+	format?: moment.MomentFormatSpecification
 ): moment.Moment => {
 	//NOTE: Date() is not supported
 	// use strict mode of moments
@@ -53,11 +50,11 @@ export const now = (): ReturnType<typeof asDate> => {
 };
 
 const ipv4: RegExp = (() => {
-	const max = "25[0-5]";
-	const twos = "2[0-4][0-9]";
-	const ones = "(?:1[0-9]|[1-9])?[0-9]";
+	const max = "25[0-5]" as const;
+	const twos = "2[0-4][0-9]" as const;
+	const ones = "(?:1[0-9]|[1-9])?[0-9]" as const;
 
-	const part = `(${max}|${twos}|${ones})`;
+	const part = `(${max}|${twos}|${ones})` as const;
 	const re = generateSequence(() => part)
 		.take(4)
 		.joinToString({
@@ -70,11 +67,11 @@ const ipv4: RegExp = (() => {
 })();
 
 export const RegularExpressions = {
+	ipv4,
 	digit: /[0-9]/,
 	lowercaseLetter: /[a-z]/,
 	uppercaseLetter: /[A-Z]/,
 	specialCharacter: /[\/.!?\[\](){}<>^$€#@,;:\-_%&~"'`|=+*]/,
-	ipv4,
 };
 
 export const Sanitizers = {

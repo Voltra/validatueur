@@ -3,10 +3,10 @@ import { RuleChain } from "../rules";
 import * as I from "./index";
 
 declare module "../rules" {
+	/****************************************************************************\
+	 * Generic
+	\****************************************************************************/
 	interface RuleChain {
-		/****************************************************************************\
-		 * Generic
-		\****************************************************************************/
 		/**
 		 * Either be null or validate the given chain
 		 * @param chain - The chain to validate if not null
@@ -40,7 +40,7 @@ declare module "../rules" {
 		 * @param chains - The validation chains to validate any of
 		 * @asMemberOf RuleChain
 		 */
-		anyOf<T, U = T, A = unknown, B = A>(
+		anyOfRules<T, U = T, A = unknown, B = A>(
 			this: RuleChain<T, U>,
 			chains: RuleChain<A, B>[]
 		): RuleChain<A, B>;
@@ -90,51 +90,47 @@ declare module "../rules" {
 		 * @param values - The finite set of values the value can take
 		 * @asMemberOf RuleChain
 		 */
-		oneOf<A, B = A>(
-			this: RuleChain<A, B>,
-			values: B[]
-		): RuleChain<B>;
+		oneOf<T>(
+			this: RuleChain<T>,
+			values: T[]
+		): RuleChain<T>;
 
 		/**
 		 * Assert that the value is not one of the provided values
 		 * @param values - The finite set of values the value cannot take
 		 * @asMemberOf RuleChain
 		 */
-		notIn<A, B = A>(
-			this: RuleChain<A, B>,
-			values: B[]
-		): RuleChain<B>;
+		notIn<T>(
+			this: RuleChain<T>,
+			values: T[]
+		): RuleChain<T>;
 
 		/**
 		 * Assert that the value is the expected value
 		 * @param expected - The expected value
 		 * @asMemberOf RuleChain
 		 */
-		is<A, B = A>(
-			this: RuleChain<A, B>,
-			expected: B
-		): RuleChain<B>;
+		is<T>(
+			this: RuleChain<T>,
+			expected: T
+		): RuleChain<T>;
 
 		/**
 		 * Assert that the value is different from the expected value
 		 * @param expected - The expected value
 		 * @asMemberOf RuleChain
 		 */
-		isNot<A, B = A>(
-			this: RuleChain<A, B>,
-			expected: B
-		): RuleChain<B>;
-
-		/****************************************************************************\
-		 * Dates
-		\****************************************************************************/
+		isNot<T>(
+			this: RuleChain<T>,
+			expected: T
+		): RuleChain<T>;
 	}
 
-	interface RuleChain {
-		/****************************************************************************\
-		 * Numbers
-		\****************************************************************************/
 
+	/****************************************************************************\
+	 * Numbers
+	\****************************************************************************/
+	interface RuleChain {
 		/**
 		 * Assert that the value is less than the expected value
 		 * @param expected - The expected value
@@ -236,13 +232,13 @@ declare module "../rules" {
 		notNaN(
 			this: RuleChain<number>
 		): RuleChain<number>;
+	}
 
 
-
-		/****************************************************************************\
-		 * Strings
-		\****************************************************************************/
-
+	/****************************************************************************\
+	 * Strings
+	\****************************************************************************/
+	interface RuleChain {
 		/**
 		 * Assert that the value's length does not exceed to given max value
 		 * @param max - The maximum length
@@ -294,7 +290,7 @@ declare module "../rules" {
 		/**
 		 * Assert that the string matches the given pattern
 		 * @param pattern - The regular expression to test against
-		 * @param [fullMatch = true] - Whether it should match the entire string or not
+		 * @param [fullMatch = true] - Whether it should match the entire string or not (default: true)
 		 * @asMemberOf RuleChain
 		 */
 		regex(
@@ -336,10 +332,10 @@ declare module "../rules" {
 		): RuleChain<string>;
 
 		/**
-		 * Assert that the string is a decent password (8-100 characters, an uppercase letter, a lowercase letter, a digit and a special character)
+		 * Assert that the string is a decent password (8-60 characters, an uppercase letter, a lowercase letter, a digit and a special character)
 		 * @param [options = {}]
 		 * @param [options.min = 8]
-		 * @param [options.max = 100]
+		 * @param [options.max = 60]
 		 * @param [options.endExclusive = true]
 		 * @param [options.startExclusive = false]
 		 * @param [options.useMax = true]
@@ -409,5 +405,52 @@ declare module "../rules" {
 			this: RuleChain<string>,
 			needle: string
 		): RuleChain<string>;
+	}
+
+
+
+
+	/****************************************************************************\
+	 * Dates
+	\****************************************************************************/
+	interface RuleChain {
+		after(
+			this: RuleChain<moment.MomentInput>,
+			min: moment.MomentInput,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		before(
+			this: RuleChain<moment.MomentInput>,
+			max: moment.MomentInput,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		sameOrAfter(
+			this: RuleChain<moment.MomentInput>,
+			min: moment.MomentInput,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		sameOrBefore(
+			this: RuleChain<moment.MomentInput>,
+			max: moment.MomentInput,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		dateBetween(
+			this: RuleChain<moment.MomentInput>,
+			min: moment.MomentInput,
+			max: moment.MomentInput,
+			options?: Partial<I.DateBetweenArgs>,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		onLeapYear(
+			this: RuleChain<moment.MomentInput>,
+			format?: moment.MomentFormatSpecification
+		): RuleChain<moment.MomentInput>;
+
+		//TODO: Typings for Dates
 	}
 }

@@ -42,6 +42,12 @@ export interface PasswordArgs {
 	useMax: boolean;
 }
 
+export interface DateBetweenArgs {
+	startExcluded: boolean;
+	endExcluded: boolean;
+	unit: moment.unitOfTime.StartOf;
+}
+
 /****************************************************************************\
  * Generic
 \****************************************************************************/
@@ -337,32 +343,30 @@ registerExtensionRule("withinAnyRange", function(
 });
 
 // notNaN()
-registerValidator(new NotNaN<number>());
+registerValidator(new NotNaN());
 
 /****************************************************************************\
  * Strings
 \****************************************************************************/
 // maxLength(n, exclusive=true)
-registerExtensionRule("maxLength", function <T extends number = number, U extends T = T>(
-	this: RuleChain<T, U>,
+registerExtensionRule("maxLength", function(
+	this: RuleChain<string>,
 	max: number,
 	exclusive: boolean = true
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return exclusive ? str.length < max : str.length <= max;
+	return this.satisfies((value: string) => {
+		return exclusive ? value.length < max : value.length <= max;
 	});
 });
 
 // minLength(n, exclusive=false)
-registerExtensionRule("minLength", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("minLength", function(
+	this: RuleChain<string>,
 	min: number,
 	exclusive: boolean = false
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return exclusive ? str.length >= min : str.length >= min;
+	return this.satisfies((value: string) => {
+		return exclusive ? value.length >= min : value.length >= min;
 	});
 });
 
@@ -380,8 +384,8 @@ Ex:
 		username: rules().lengthBetween({start: 6, end: 25}),
 	}
 */
-registerExtensionRule("lengthBetween", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("lengthBetween", function(
+	this: RuleChain<string>,
 	{
 		start,
 		end,
@@ -391,7 +395,7 @@ registerExtensionRule("lengthBetween", function <T = string, U = unknown>(
 	}: BetweenArgs
 ) {
 	const min = this.minLength(start, startExclusive);
-	return useEnd ? min.maxLength(<number>end, endExclusive) : min;
+	return useEnd ? min.maxLength(end as number, endExclusive) : min;
 });
 
 /*
@@ -409,8 +413,8 @@ Ex:
 		}]),
 	}
 */
-registerExtensionRule("lengthInAnyRange", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("lengthInAnyRange", function(
+	this: RuleChain<string>,
 	ranges: BetweenArgs[]
 ) {
 	return this.anyOfRules(
@@ -421,14 +425,13 @@ registerExtensionRule("lengthInAnyRange", function <T = string, U = unknown>(
 });
 
 // regex(pattern, fullMatch=true)
-registerExtensionRule("regex", function <T = unknown, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("regex", function(
+	this: RuleChain<string>,
 	pattern: RegExp,
 	fullMatch: boolean = true
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return fullMatch ? pattern.test(str) : !!str.match(pattern);
+	return this.satisfies((value: string) => {
+		return fullMatch ? pattern.test(value) : !!value.match(pattern);
 	});
 });
 
@@ -443,8 +446,8 @@ export const registerRegexRule = (
 	patternFactory: () => RegExp,
 	fullMatch: boolean = false
 ) => {
-	registerExtensionRule(name, function <T = string, U = unknown>(
-		this: RuleChain<T, U>
+	registerExtensionRule(name, function(
+		this: RuleChain<string>
 	) {
 		return this.regex(patternFactory(), fullMatch);
 	});
@@ -480,11 +483,11 @@ registerRegexRule(
 		useMax=true,
 	})
 */
-registerExtensionRule("password", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("password", function(
+	this: RuleChain<string>,
 	{
 		min = 8,
-		max = 100,
+		max = 60,
 		endExclusive = true,
 		startExclusive = false,
 		useMax = true,
@@ -492,7 +495,7 @@ registerExtensionRule("password", function <T = string, U = unknown>(
 ): RuleChain<string> {
 	const chain = this.hasUppercaseLetter()
 		.hasLowercaseLetter()
-		.hasNumber()
+		.hasDigit()
 		.hasSpecialCharacter()
 		.minLength(min, startExclusive);
 
@@ -500,135 +503,117 @@ registerExtensionRule("password", function <T = string, U = unknown>(
 });
 
 // startsWith(prefix)
-registerExtensionRule("startsWith", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("startsWith", function(
+	this: RuleChain<string>,
 	start: string
-): RuleChain<T, U> {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return str.startsWith(start);
-	});
+): RuleChain<string> {
+	return this.satisfies((value: string) => value.startsWith(start));
 });
 
 // doesNotStartWith(prefix)
-registerExtensionRule("doesNotStartWith", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("doesNotStartWith", function(
+	this: RuleChain<string>,
 	start: string
-): RuleChain<T, U> {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return !str.startsWith(start);
-	});
+): RuleChain<string> {
+	return this.satisfies((value: string) => value.startsWith(start));
 });
 
 // endsWith(suffix)
-registerExtensionRule("endsWith", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("endsWith", function(
+	this: RuleChain<string>,
 	end: string
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return str.endsWith(end);
-	});
+	return this.satisfies((value: string) => value.endsWith(end));
 });
 
 // doesNotEndWith(suffix)
-registerExtensionRule("doesNotEndWith", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("doesNotEndWith", function(
+	this: RuleChain<string>,
 	end: string
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return !str.endsWith(end);
-	});
+	return this.satisfies((value: string) => !value.endsWith(end));
 });
 
 // contains(needle)
-registerExtensionRule("contains", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("contains", function(
+	this: RuleChain<string>,
 	substr: string
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return str.includes(substr);
-	});
+	return this.satisfies((value: string) => value.includes(substr));
 });
 
 // doesNotContain(needle)
-registerExtensionRule("doesNotContain", function <T = string, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("doesNotContain", function(
+	this: RuleChain<string>,
 	substr: string
 ) {
-	return this.satisfies((value: T) => {
-		const str = asStr(value);
-		return !str.includes(substr);
-	});
+	return this.satisfies((value: string) => !value.includes(substr));
 });
 
 /****************************************************************************\
  * Dates
 \****************************************************************************/
-registerExtensionRule("after", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	min: any,
-	format?: string
+registerExtensionRule("after", function(
+	this: RuleChain<moment.MomentInput>,
+	min: moment.MomentInput,
+	format?: moment.MomentFormatSpecification
 ) {
 	const minDate = asDate(min, format);
-	return this.satisfies((value: T) => {
+	return this.satisfies((value: moment.MomentInput) => {
 		return asDate(value, format).isAfter(minDate);
 	});
 });
 
-registerExtensionRule("before", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	min: any,
-	format?: string
+registerExtensionRule("before", function(
+	this: RuleChain<moment.MomentInput>,
+	max: moment.MomentInput,
+	format?: moment.MomentFormatSpecification
 ) {
-	const minDate = asDate(min, format);
-	return this.satisfies((value: T) => {
-		return asDate(value, format).isBefore(minDate);
+	const maxDate = asDate(max, format);
+	return this.satisfies((value: moment.MomentInput) => {
+		return asDate(value, format).isBefore(maxDate);
 	});
 });
 
-registerExtensionRule("sameOrAfter", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	min: any,
-	format?: string
+registerExtensionRule("sameOrAfter", function(
+	this: RuleChain<moment.MomentInput>,
+	min: moment.MomentInput,
+	format?: moment.MomentFormatSpecification
 ) {
 	const minDate = asDate(min, format);
-	return this.satisfies((value: T) => {
+	return this.satisfies((value: moment.MomentInput) => {
 		return asDate(value, format).isSameOrAfter(minDate);
 	});
 });
 
-registerExtensionRule("sameOrBefore", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	min: any,
-	format?: string
+registerExtensionRule("sameOrBefore", function(
+	this: RuleChain<moment.MomentInput>,
+	min: moment.MomentInput,
+	format?: moment.MomentFormatSpecification
 ) {
 	const minDate = asDate(min, format);
-	return this.satisfies((value: T) => {
+	return this.satisfies((value: moment.MomentInput) => {
 		return asDate(value, format).isSameOrBefore(minDate);
 	});
 });
 
-registerExtensionRule("dateBetween", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	min: any,
-	max: any,
-	{ startExcluded = false, endExcluded = true, unit = undefined } = {},
-	format?: string
+registerExtensionRule("dateBetween", function(
+	this: RuleChain<moment.MomentInput>,
+	min: moment.MomentInput,
+	max: moment.MomentInput,
+	{ startExcluded = false, endExcluded = true, unit = undefined }: Partial<DateBetweenArgs> = {},
+	format?: moment.MomentFormatSpecification
 ) {
 	const minDate = asDate(min, format);
 	const maxDate = asDate(max, format);
-	const boundFmt: "()" | "[)" | "(]" | "[]" = (() => {
-		if (startExcluded && endExcluded) return "()";
-		else if (startExcluded) return "(]";
-		else if (endExcluded) return "[)";
-		else return "[]";
+	const boundFmt = (() => {
+		if (startExcluded && endExcluded) return "()" as const;
+		else if (startExcluded) return "(]" as const;
+		else if (endExcluded) return "[)" as const;
+		else return "[]" as const;
 	})();
 
-	return this.satisfies((value: T) => {
+	return this.satisfies((value: moment.MomentInput) => {
 		return asDate(value, format).isBetween(
 			minDate,
 			maxDate,
@@ -638,20 +623,20 @@ registerExtensionRule("dateBetween", function <T = Date, U = unknown>(
 	});
 });
 
-registerExtensionRule("onLeapYear", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
-	format?: string
+registerExtensionRule("onLeapYear", function(
+	this: RuleChain<moment.MomentInput>,
+	format?: moment.MomentFormatSpecification
 ) {
-	return this.satisifes((value: T) => {
+	return this.satisfies((value: moment.MomentInput) => {
 		return asDate(value, format).isLeapYear();
 	});
 });
 
-registerExtensionRule("beforeOffsetOf", function <T = Date, U = unknown>(
-	this: RuleChain<T, U>,
+registerExtensionRule("beforeOffsetOf", function <T = Date>(
+	this: RuleChain<T>,
 	amount?: moment.DurationInputArg1,
 	unit?: moment.DurationInputArg2,
-	format?: string
+	format?: moment.MomentFormatSpecification
 ) {
 	const now_ = now();
 	const max = now_.clone().add(amount, unit);

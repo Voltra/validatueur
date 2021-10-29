@@ -2,19 +2,19 @@ import { AbstractValidator } from "./AbstractValidator";
 import { noneIf } from "../api/types";
 import { Validatueur } from "../api";
 
-export class ObjectOfShape<T = unknown> extends AbstractValidator<
-	T,
-	Record<string, any>
+export class ObjectOfShape<Keys extends string = string, Values = unknown> extends AbstractValidator<
+	Record<Keys, Values>
 > {
-	public get rule(): string {
-		return "objectOfShape";
+	public get rule() {
+		return "objectOfShape" as const;
 	}
-	protected async __validate(
-		field: string,
-		value: T,
-		schema: Validatueur.Schema,
-		objectSchema: Validatueur.Schema
-	): Validatueur.Promise<Record<string, any>> {
+
+	protected async __validate<SchemaKeys extends string = string, SchemaValues = unknown, Key extends SchemaKeys = SchemaKeys>(
+		field: Key,
+		value: Record<Keys, Values>,
+		schema: Validatueur.Schema<SchemaKeys, SchemaValues>,
+		objectSchema: Validatueur.Schema<Keys, Values>
+	): Validatueur.Promise<Record<Keys, Values>> {
 		await noneIf(typeof value !== "object", value);
 
 		const { errors, values, valid } = await objectSchema.validate(

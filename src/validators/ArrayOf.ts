@@ -3,21 +3,21 @@ import { Validatueur } from "../api";
 import { RuleChain } from "../rules";
 
 export class ArrayOf<T = unknown> extends AbstractValidator<T[]> {
-	public get rule(): string {
-		return "arrayOf";
+	public get rule() {
+		return "arrayOf" as const;
 	}
 
-	protected async __validate(
-		field: string,
+	protected async __validate<Keys extends string = string, Values = unknown, Key extends Keys = Keys>(
+		field: Key,
 		values: T[],
-		schema: Validatueur.Schema,
+		schema: Validatueur.Schema<Keys, Values>,
 		rules: RuleChain<T>
 	): Validatueur.Promise<T[]> {
 		const ret: T[] = [];
 
 		// validate values "SEQUENTIALLY"
 		for (const value of values) {
-			const newValue = await rules.__validate(field, value, schema);
+			const newValue = await rules.__validate<Keys, Key, Values>(field, value, schema);
 			ret.push(newValue);
 		}
 

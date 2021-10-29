@@ -6,18 +6,22 @@ import { RuleChain } from "../rules";
 //TODO: Move to sanitizers
 
 export class Nullable<T = unknown> extends AbstractValidator<T | null> {
-	public get rule(): string {
-		return "nullable";
+	public get rule() {
+		return "nullable" as const;
 	}
 
-	public shouldValidate(value: T | null, args: Validatueur.ValidatorArgs, schema: Validatueur.Schema): boolean {
+	public shouldValidate<Keys extends string = string, Values = unknown, Key extends Keys = Keys>(
+		value: T | null,
+		args: Validatueur.ValidatorArgs<Key>,
+		schema: Validatueur.Schema<Keys, Values>
+	): boolean {
 		return true; // always validate as it converts to null if it doesn't have any value
 	}
 
-	protected __validate(
-		field: string,
+	protected __validate<Keys extends string = string, Values = unknown, Key extends Keys = Keys>(
+		field: Key,
 		value: T | null,
-		schema: Validatueur.Schema,
+		schema: Validatueur.Schema<Keys, Values>,
 		rules: RuleChain<T>
 	): Validatueur.Promise<T | null> {
 		if (!isValue(value)) return Promise.resolve(null);
